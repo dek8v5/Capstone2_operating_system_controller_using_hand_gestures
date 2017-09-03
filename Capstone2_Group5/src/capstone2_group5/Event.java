@@ -12,10 +12,14 @@ import java.util.HashMap;
  * @author Cameron
  */
 public class Event {
-    private static Integer eventID = 1;
+    private static Integer handlerID = 1;
     private static HashMap<String, HashMap> eventHandlers = new HashMap<>();
-    private static HashMap<Integer, EventHandler> _eventHandlers = new HashMap<>();
+    private static HashMap<Integer, String> handlerIdToType = new HashMap<>();
     
+    private static Integer getNextID(){
+        return handlerID++;
+    }
+   
     public static Integer registerHandler(String event, EventHandler handler){
         Integer id = Event.getNextID();
         if(!eventHandlers.containsKey(event)){
@@ -23,7 +27,12 @@ public class Event {
             eventHandlers.put(event, handlerHash);
         }
         eventHandlers.get(event).put(id, handler);
+        handlerIdToType.put(id, event);
         return id;
+    }
+    
+    public static void removeHandler(Integer id){
+        eventHandlers.get(handlerIdToType.get(id)).remove(id);
     }
     
     public static void trigger(Event event){
@@ -31,10 +40,6 @@ public class Event {
             EventHandler _handler = (EventHandler)handler;
             _handler.handle(event);
         });
-    }
-    
-    private static Integer getNextID(){
-        return eventID++;
     }
     
     public String type;
