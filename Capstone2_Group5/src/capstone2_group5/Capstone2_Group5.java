@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Capstone2_Group5;
+package capstone2_group5;
 
 /**
  *
@@ -24,7 +24,7 @@ public class Capstone2_Group5 {
         startup.type = "startup";
         Event.trigger(startup);
         Event.trigger(startup);
-        Event.trigger(startup);
+        //Cameron's test
         Event.trigger(startup);
         Event.trigger(startup);
         Event.trigger(startup);
