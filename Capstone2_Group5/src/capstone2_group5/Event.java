@@ -43,4 +43,12 @@ public class Event {
     }
     
     public String type;
+    
+    public Event(String type){
+        this.type = type;
+    }
+    
+    public void trigger(){
+        Event.trigger(this);
+    }
 }

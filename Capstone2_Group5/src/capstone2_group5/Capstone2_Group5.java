@@ -20,10 +20,12 @@ public class Capstone2_Group5 {
         int startupHandlerId = Event.registerHandler("startup", (Event event) -> {
             System.out.println("Startup occurred!!!!!!!!");
         });
-        Event startup = new Event();
-        startup.type = "startup";
+        Event startup = new Event("startup");
         Event.trigger(startup);
-
+        
+        
+        GestureRecognizer recognizer = new BasicRecognizer();
+        LeapService.start(recognizer);
     }
     
 }
