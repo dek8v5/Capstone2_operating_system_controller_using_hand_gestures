@@ -24,6 +24,7 @@ public class Capstone2_Group5 {
         startup.type = "startup";
         Event.trigger(startup);
         Event.trigger(startup);
+        //Cameron's test
         Event.trigger(startup);
         Event.trigger(startup);
         Event.trigger(startup);
@@ -36,6 +37,13 @@ public class Capstone2_Group5 {
         Event.trigger(startup);
         Event.trigger(startup);
         System.out.println("this is dedwi");
+
+        
+        
+        
+        //HEEEELLLLOOOO
+        
+        
     }
     
 }
