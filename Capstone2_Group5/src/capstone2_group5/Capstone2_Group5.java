@@ -35,6 +35,12 @@ public class Capstone2_Group5 {
         Event.trigger(startup);
         Event.trigger(startup);
         Event.trigger(startup);
+        
+        
+        
+        //HEEEELLLLOOOO
+        
+        
     }
     
 }
