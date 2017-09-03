@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Capstone2_Group5;
+package capstone2_group5;
 
 /**
  *
@@ -35,6 +35,12 @@ public class Capstone2_Group5 {
         Event.trigger(startup);
         Event.trigger(startup);
         Event.trigger(startup);
+        
+        
+        
+        //HEEEELLLLOOOO
+        
+        
     }
     
 }
