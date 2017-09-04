@@ -43,9 +43,18 @@ public class Event {
     }
     
     public String type;
+    public HashMap details = new HashMap();
     
     public Event(String type){
         this.type = type;
+    }
+    
+    public void addDetail(String name, Object detail){
+        details.put(name, detail);
+    }
+    
+    public Object get(String name){
+        return details.get(name);
     }
     
     public void trigger(){

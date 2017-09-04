@@ -12,8 +12,13 @@ import com.leapmotion.leap.*;
  * @author Cameron
  */
 public class BasicRecognizer implements GestureRecognizer{
-    private Event thumbsUp = new Event("gesturePerformed_ThumbsUp");
-    private Event pointingWithIndex = new Event("gesturePerformed_PointingWithIndex");
+    private Event thumbsUp = new Event("gesturePerformed");
+    private Event pointingWithIndex = new Event("gesturePerformed");
+    
+    public BasicRecognizer(){
+        thumbsUp.addDetail("gesture", "thumbsUp");
+        pointingWithIndex.addDetail("gesture", "pointingWithIndexFinger");
+    }
     
     public void checkForPointingWithIndex(Frame frame){
         Finger index = frame.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0);
@@ -23,7 +28,6 @@ public class BasicRecognizer implements GestureRecognizer{
         Finger thumb = frame.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0);
         
         if(index.isExtended() && !middle.isExtended() && !ring.isExtended() && !pinky.isExtended() && !thumb.isExtended()){
-            System.out.println("Pointing with Index!!");
             pointingWithIndex.trigger();
         }
     }
@@ -36,7 +40,6 @@ public class BasicRecognizer implements GestureRecognizer{
         Finger thumb = frame.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0);
         
         if(!index.isExtended() && !middle.isExtended() && !ring.isExtended() && !pinky.isExtended() && thumb.isExtended()){
-            System.out.println("Thumbs Up!!");
             thumbsUp.trigger();
         }
     }
