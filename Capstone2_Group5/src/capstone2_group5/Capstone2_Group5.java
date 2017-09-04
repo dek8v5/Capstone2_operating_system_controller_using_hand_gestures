@@ -22,6 +22,9 @@ public class Capstone2_Group5 {
         });
         Event startup = new Event("startup");
         Event.trigger(startup);
+        int gesturePerformedId = Event.registerHandler("gesturePerformed", (Event event) -> {
+           System.out.println("Gesture performed: " + event.get("gesture")); 
+        });
         
         
         GestureRecognizer recognizer = new BasicRecognizer();
