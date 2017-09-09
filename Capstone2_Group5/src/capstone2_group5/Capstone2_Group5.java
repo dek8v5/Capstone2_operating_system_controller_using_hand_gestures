@@ -20,30 +20,16 @@ public class Capstone2_Group5 {
         int startupHandlerId = Event.registerHandler("startup", (Event event) -> {
             System.out.println("Startup occurred!!!!!!!!");
         });
-        Event startup = new Event();
-        startup.type = "startup";
+        Event startup = new Event("startup");
         Event.trigger(startup);
-        Event.trigger(startup);
-        //Cameron's test
-        Event.trigger(startup);
-        Event.trigger(startup);
-        Event.trigger(startup);
-        Event.trigger(startup);
-        Event.trigger(startup);
-        Event.trigger(startup);
-        Event.trigger(startup);
-        Event.trigger(startup);
-        Event.trigger(startup);
-        Event.trigger(startup);
-        Event.trigger(startup);
-        System.out.println("this is dedwi");
 
+        int gesturePerformedId = Event.registerHandler("gesturePerformed", (Event event) -> {
+           System.out.println("Gesture performed: " + event.get("gesture")); 
+        });
         
         
-        
-        //HEEEELLLLOOOO
-        
-        
+        GestureRecognizer recognizer = new BasicRecognizer();
+        LeapService.start(recognizer);
     }
     
 }
