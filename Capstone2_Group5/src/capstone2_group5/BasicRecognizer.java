@@ -14,6 +14,8 @@ import com.leapmotion.leap.*;
 public class BasicRecognizer implements GestureRecognizer{
     private Event thumbsUp = new Event("gesturePerformed");
     private Event pointingWithIndex = new Event("gesturePerformed");
+    private BasicCommands command = new BasicCommands();
+    
     
     public BasicRecognizer(){
         thumbsUp.addDetail("gesture", "thumbsUp");
@@ -29,6 +31,7 @@ public class BasicRecognizer implements GestureRecognizer{
         
         if(index.isExtended() && !middle.isExtended() && !ring.isExtended() && !pinky.isExtended() && !thumb.isExtended()){
             pointingWithIndex.trigger();
+            command.LeftClick();
         }
     }
     
