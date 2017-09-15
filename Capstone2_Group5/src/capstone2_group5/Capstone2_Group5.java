@@ -27,6 +27,10 @@ public class Capstone2_Group5 {
            System.out.println("Gesture performed: " + event.get("gesture")); 
         });
         
+        int commandPerformedId = Event.registerHandler("commandPerformed", (Event event) -> {
+           System.out.println("Command performed: " + event.get("command")); 
+        });
+        
         
         GestureRecognizer recognizer = new BasicRecognizer();
         LeapService.start(recognizer);
