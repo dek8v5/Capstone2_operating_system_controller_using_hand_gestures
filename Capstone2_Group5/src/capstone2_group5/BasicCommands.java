@@ -47,6 +47,8 @@ public class BasicCommands {
     private int yCenter;
     private boolean zAxis;
     
+    private double JoySens;
+    
     public BasicCommands() {
         
         Click.addDetail("command", "click");
@@ -69,6 +71,8 @@ public class BasicCommands {
         
         rightHand = true;
         zAxis = true;
+        
+        JoySens = 2;
         
         try{
             
@@ -94,7 +98,7 @@ public class BasicCommands {
         
     }
     
-    public BasicCommands(int autoDelay, int clickDelay, int keyDelay, int moveDelay, int ycenter, int pmulti, boolean hand, boolean axis){
+    public BasicCommands(int autoDelay, int clickDelay, int keyDelay, int moveDelay, int ycenter, int pmulti, boolean hand, boolean axis, double joysens){
         
         Click.addDetail("command", "click");
         ClickHeld.addDetail("command", "click held");
@@ -116,6 +120,8 @@ public class BasicCommands {
         
         rightHand = hand;
         zAxis = axis;
+        
+        JoySens = joysens;
         
         try{
             
@@ -240,9 +246,9 @@ public class BasicCommands {
         
         Vector pos = myHand.palmPosition();
         
-        int x_pos = (int)pos.getX();
-        int y_pos = (int)pos.getY();
-        int z_pos = (int)pos.getZ();
+        int x_pos = (int)(pos.getX()/JoySens);
+        int y_pos = (int)(pos.getY()/JoySens);
+        int z_pos = (int)(pos.getZ()/JoySens);
         
         if(zAxis == true){
             MoveMouse(CurrentX + x_pos, CurrentY + z_pos);
