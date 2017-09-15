@@ -68,7 +68,7 @@ public class BasicCommands {
         pMulti = 2;
         
         rightHand = true;
-        zAxis = false;
+        zAxis = true;
         
         try{
             
@@ -303,6 +303,14 @@ public class BasicCommands {
             MoveMouse(TrackX + pMulti*x_pos, TrackY - pMulti*(y_pos-yCenter));
         }
            
+    }
+    
+    public void MouseTrackUpdate(){
+    
+        Point a = MouseInfo.getPointerInfo().getLocation();
+
+        TrackX = (int)a.getX();
+        TrackY = (int)a.getY();
     }
     
     public int GetKeycode(KeyEvent a){
