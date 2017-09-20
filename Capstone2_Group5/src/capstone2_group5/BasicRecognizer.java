@@ -31,10 +31,10 @@ public class BasicRecognizer implements GestureRecognizer{
         
         if(index.isExtended() && !middle.isExtended() && !ring.isExtended() && !pinky.isExtended() && !thumb.isExtended()){
             pointingWithIndex.trigger();
-            command.MoveMouseJoystick(frame);
-        }//else{
-            //command.MouseTrackUpdate(); //Very inefficent, is constantly updating the mouse position on none recognized frames
-        //}
+            command.MoveMouseTrack(frame);
+        }else{
+            command.MouseTrackUpdate(); //Very inefficent, is constantly updating the mouse position on none recognized frames
+        }
     }
     
     public void checkForThumbsUp(Frame frame){

@@ -64,9 +64,9 @@ public class BasicCommands {
         AutoDelay = 50;     //Default Values can change later
         ClickDelay = 250;
         KeyDelay = 250;
-        MoveDelay = 50;
+        MoveDelay = 1;
         
-        yCenter = 100;
+        yCenter = 200;
         pMulti = 2;
         
         rightHand = true;
