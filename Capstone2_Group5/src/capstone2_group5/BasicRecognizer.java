@@ -6,6 +6,7 @@
 package capstone2_group5;
 
 import com.leapmotion.leap.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -15,11 +16,19 @@ public class BasicRecognizer implements GestureRecognizer{
     private Event thumbsUp = new Event("gesturePerformed");
     private Event pointingWithIndex = new Event("gesturePerformed");
     private BasicCommands command = new BasicCommands();
+    private ArrayList<Gesture> gestures = new ArrayList();
     
+    private long lastCheck = 0;
+
     
     public BasicRecognizer(){
         thumbsUp.addDetail("gesture", "thumbsUp");
         pointingWithIndex.addDetail("gesture", "pointingWithIndexFinger");
+        Event.registerHandler("gestureCreated", (Event event)->{
+            Gesture gesture = (Gesture)event.details.get("gesture");
+            gestures.add(gesture);
+            System.out.println("Gesture <" + gesture.name + "> added to recognized gesture list");
+        });
     }
     
     public void checkForPointingWithIndex(Frame frame){
@@ -49,8 +58,19 @@ public class BasicRecognizer implements GestureRecognizer{
     
     @Override
     public void scan(Frame frame) {
-        checkForThumbsUp(frame);
-        checkForPointingWithIndex(frame);
+//        checkForThumbsUp(frame);
+//        checkForPointingWithIndex(frame);
+//        if(frame.timestamp() > (lastCheck + (3000000))){
+//            lastCheck = frame.timestamp();
+//            System.out.println("3 second intervals");
+            for(Gesture gesture : gestures){
+                if(gesture.performedIn(frame)){
+                    Event gesturePerformed = new Event("gesturePerformed");
+                    gesturePerformed.details.put("gesture", gesture.name);
+                    gesturePerformed.trigger();
+                }
+            }
+//        }
     }
     
 }
