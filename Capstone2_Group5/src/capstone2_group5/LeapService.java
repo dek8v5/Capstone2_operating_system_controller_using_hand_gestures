@@ -9,7 +9,7 @@ import com.leapmotion.leap.*;
  *
  * @author Cameron
  */
-public class LeapService {
+public class LeapService implements Runnable{
     private static Controller controller = new Controller();
     private static Boolean running = false;
     private static Listener listener;
@@ -19,20 +19,22 @@ public class LeapService {
         listener = new LeapServiceListener(recognizer);
         controller.addListener(listener);
         running = true;
-        System.out.println(controller.isServiceConnected());
-        while(running){
-            System.out.println(controller.isServiceConnected());
-            while(controller.isServiceConnected()){
-//                System.out.println(controller.frame().);
-            }
-            while(!controller.isServiceConnected()){
-                
-            }
-        
-        }
+        Thread thread = new Thread(new LeapService());
+        thread.start();
     }
     
     public static void stop(){
         running = false;
+    }
+
+    @Override
+    public void run() {
+        while(running){
+            //System.out.println("Leap motion controller connected: " + controller.isServiceConnected());
+            while(controller.isServiceConnected() && running){
+            }
+            while(!controller.isServiceConnected() && running){
+            }
+        }
     }
 }
