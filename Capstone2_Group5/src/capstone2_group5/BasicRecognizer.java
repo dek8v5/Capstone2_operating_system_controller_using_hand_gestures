@@ -24,8 +24,8 @@ public class BasicRecognizer implements GestureRecognizer{
     public BasicRecognizer(){
         thumbsUp.addDetail("gesture", "thumbsUp");
         pointingWithIndex.addDetail("gesture", "pointingWithIndexFinger");
-        Event.registerHandler("gestureCreated", (Event event)->{
-            Gesture gesture = (Gesture)event.details.get("gesture");
+        Event.registerHandler("gestureCaptured", (Event event)->{
+            Gesture gesture = (Gesture)event.get("gesture");
             gestures.add(gesture);
             System.out.println("Gesture <" + gesture.name + "> added to recognized gesture list");
         });
@@ -66,7 +66,7 @@ public class BasicRecognizer implements GestureRecognizer{
             for(Gesture gesture : gestures){
                 if(gesture.performedIn(frame)){
                     Event gesturePerformed = new Event("gesturePerformed");
-                    gesturePerformed.details.put("gesture", gesture.name);
+                    gesturePerformed.addDetail("gesture", gesture.name);
                     gesturePerformed.trigger();
                 }
             }
