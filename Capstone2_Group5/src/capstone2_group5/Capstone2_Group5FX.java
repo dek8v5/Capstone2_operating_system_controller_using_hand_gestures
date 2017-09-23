@@ -29,10 +29,7 @@ public class Capstone2_Group5FX extends Application {
             
             @Override
             public void handle(ActionEvent event) {
-                EventListeners listeners = new EventListeners();
-                listeners.StartUpEventTrigger();
-                BasicRecognizer recognizer = new BasicRecognizer();
-                LeapService.start(recognizer);
+                    Capstone2_Group5.main(null);
             }
         });
         
