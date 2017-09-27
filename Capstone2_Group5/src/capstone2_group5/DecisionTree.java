@@ -186,7 +186,5 @@ public class DecisionTree {
         } else {
             return null;
         }
-    }
-    
-    
+    }   
 }
