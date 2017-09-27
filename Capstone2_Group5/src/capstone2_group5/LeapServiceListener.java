@@ -5,7 +5,6 @@
  */
 package capstone2_group5;
 import com.leapmotion.leap.*;
-import java.util.function.Consumer;
 
 /**
  *
@@ -14,17 +13,28 @@ import java.util.function.Consumer;
 public class LeapServiceListener extends Listener{
     public Controller controller;
     public GestureRecognizer gestureRecognizer;
+    private final Event controllerConnected;
+    private final Event controllerDisconnected;
     
     public LeapServiceListener(GestureRecognizer gestureRecognizer){
         this.gestureRecognizer = gestureRecognizer;
+        controllerConnected = new Event(Event.TYPE.LEAP_CONTROLLER_CONNECTED);
+        controllerDisconnected = new Event(Event.TYPE.LEAP_CONTROLLER_DISCONNECTED);
     }
     
+    @Override
     public void onConnect(Controller controller){
         this.controller = controller;
-        Event connected = new Event("leapControllerConnected");
-        connected.trigger();
+        controllerConnected.trigger();
+    }
+
+    @Override
+    public void onDisconnect(Controller controller) {
+        super.onDisconnect(controller);
+        controllerDisconnected.trigger();
     }
     
+    @Override
     public void onFrame(Controller controller){
         Frame frame = controller.frame();
         gestureRecognizer.scan(frame);

@@ -17,7 +17,7 @@ public class AdvancedRecognizer implements GestureRecognizer{
         try{
             Gesture gesture = DecisionTree.findGesture(frame);
             if(gesture != null){
-                Event gestureFound = new Event("gesturePerformed");
+                Event gestureFound = new Event(Event.TYPE.GESTURE_PERFORMED);
                 gestureFound.addDetail("gesture", gesture);
                 gestureFound.trigger();
             }

@@ -27,9 +27,10 @@ public class GestureCapturer implements GestureRecognizer{
     public Gesture capture() throws Exception{
         capturedFrame = lastFrame;
         Hand hand = capturedFrame.hands().frontmost();
-        if(!hand.isValid()){
-            LeapService.stop();
-            throw new Exception("Invalid hand");
+        if(hand == null || !hand.isValid()){
+            return null;
+//            LeapService.stop();
+//            throw new Exception("Invalid hand");
         }
 
         Finger index = hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0);
@@ -49,7 +50,7 @@ public class GestureCapturer implements GestureRecognizer{
         setFingerProperties(thumb, captured.thumb);
         
         captured.palm.allowedVector = getVectorRange(hand.palmNormal(), defaultAllowedPalmRadianRange);
-        Event gestureCaptured = new Event("gestureCaptured");
+        Event gestureCaptured = new Event(Event.TYPE.GESTURE_CAPTURED);
         gestureCaptured.addDetail("gesture", captured);
         gestureCaptured.trigger();
         System.out.println("Captured gesture");
