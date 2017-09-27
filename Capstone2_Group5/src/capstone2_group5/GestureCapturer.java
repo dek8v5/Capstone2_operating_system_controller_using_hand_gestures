@@ -49,6 +49,9 @@ public class GestureCapturer implements GestureRecognizer{
         setFingerProperties(thumb, captured.thumb);
         
         captured.palm.allowedVector = getVectorRange(hand.palmNormal(), defaultAllowedPalmRadianRange);
+        Event gestureCaptured = new Event("gestureCaptured");
+        gestureCaptured.addDetail("gesture", captured);
+        gestureCaptured.trigger();
         System.out.println("Captured gesture");
         System.out.println(captured);
         return captured;

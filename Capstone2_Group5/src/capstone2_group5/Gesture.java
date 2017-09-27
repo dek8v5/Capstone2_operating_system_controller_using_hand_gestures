@@ -185,6 +185,103 @@ public class Gesture extends DecisionTreeNode{
         }
     }
     
+    public Object getAttributeValue(DecisionTree.Attribute attribute){
+        Object value = null;
+        switch(attribute){
+            case INDEX_EXTENDED:
+                value = this.index.isExtended;
+                break;
+            case MIDDLE_EXTENDED:
+                value = this.middle.isExtended;
+                break;
+            case RING_EXTENDED:
+                value = this.ring.isExtended;
+                break;
+            case PINKY_EXTENDED:
+                value = this.pinky.isExtended;
+                break;
+            case THUMB_EXTENDED:
+                value = this.thumb.isExtended;
+                break;
+            case PALM_NORMAL:
+                value = this.palm.allowedVector;
+                break;
+            case INDEX_DIRECTION:
+                value = this.index.allowedDirection;
+                break;
+            case MIDDLE_DIRECTION:
+                value = this.middle.allowedDirection;
+                break;
+            case RING_DIRECTION:
+                value = this.ring.allowedDirection;
+                break;
+            case PINKY_DIRECTION:
+                value = this.pinky.allowedDirection;
+                break;
+            case THUMB_DIRECTION:
+                value = this.thumb.allowedDirection;
+                break;
+            case INDEX_METACARPAL_DIRECTION:
+                value = this.index.metacarpal.allowedDirection;
+                break;
+            case INDEX_INTERMEDIATE_DIRECTION:
+                value = this.index.intermediate.allowedDirection;
+                break;
+            case INDEX_PROXIMAL_DIRECTION:
+                value = this.index.proximal.allowedDirection;
+                break;
+            case INDEX_DISTAL_DIRECTION:
+                value = this.index.distal.allowedDirection;
+                break;
+            case MIDDLE_METACARPAL_DIRECTION:
+                value = this.middle.metacarpal.allowedDirection;
+                break;
+            case MIDDLE_INTERMEDIATE_DIRECTION:
+                value = this.middle.intermediate.allowedDirection;
+                break;
+            case MIDDLE_PROXIMAL_DIRECTION:
+                value = this.middle.proximal.allowedDirection;
+                break;
+            case MIDDLE_DISTAL_DIRECTION:
+                value = this.middle.distal.allowedDirection;
+                break;
+            case RING_METACARPAL_DIRECTION:
+                value = this.ring.metacarpal.allowedDirection;
+                break;
+            case RING_INTERMEDIATE_DIRECTION:
+                value = this.ring.intermediate.allowedDirection;
+                break;
+            case RING_PROXIMAL_DIRECTION:
+                value = this.ring.proximal.allowedDirection;
+                break;
+            case RING_DISTAL_DIRECTION:
+                value = this.ring.distal.allowedDirection;
+                break;
+            case PINKY_METACARPAL_DIRECTION:
+                value = this.pinky.metacarpal.allowedDirection;
+                break;
+            case PINKY_INTERMEDIATE_DIRECTION:
+                value = this.pinky.intermediate.allowedDirection;
+                break;
+            case PINKY_PROXIMAL_DIRECTION:
+                value = this.pinky.proximal.allowedDirection;
+                break;
+            case PINKY_DISTAL_DIRECTION:
+                value = this.pinky.distal.allowedDirection;
+                break;
+            case THUMB_INTERMEDIATE_DIRECTION:
+                value = this.thumb.intermediate.allowedDirection;
+                break;
+            case THUMB_PROXIMAL_DIRECTION:
+                value = this.thumb.proximal.allowedDirection;
+                break;
+            case THUMB_DISTAL_DIRECTION:
+                value = this.thumb.distal.allowedDirection;
+                break;
+        }
+        return value;
+    }
+    
     @Override
     public Boolean isGesture(){
         return true;

@@ -18,7 +18,8 @@ public class EventListeners {
         });
 
         int gesturePerformedId = Event.registerHandler("gesturePerformed", (Event event) -> {
-           System.out.println("Gesture performed: " + event.get("gesture")); 
+            Gesture gesture = (Gesture)event.get("gesture");
+           System.out.println("Gesture performed: " + gesture.name); 
         });
         
         int commandPerformedId = Event.registerHandler("commandPerformed", (Event event) -> {
