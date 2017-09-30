@@ -5,10 +5,20 @@
  */
 package capstone2_group5;
 
+import java.util.HashMap;
+
 /**
  *
  * @author Cameron
  */
 public class UserSettings {
+    private HashMap<Gesture, Command> gestureToCommand;
     
+    public UserSettings(){
+        gestureToCommand = new HashMap();
+    }
+    
+    public Command getCommand(Gesture gesture){
+        return gestureToCommand.get(gesture);
+    }
 }
