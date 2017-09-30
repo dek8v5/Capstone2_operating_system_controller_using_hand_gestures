@@ -20,8 +20,14 @@ public class Event {
         COMMAND_PERFORMED,
         GESTURE_CAPTURED,
         GESTURE_PERFORMED,
+        GESTURE_SET_ACTIVE,
+        GESTURE_SET_INACTIVE,
+        GESTURE_DELETED,
         LEAP_CONTROLLER_CONNECTED,
         LEAP_CONTROLLER_DISCONNECTED,
+        USER_SWITCHED,
+        USER_CREATED,
+        USER_DELETED,
     }
     
     private static Integer getNextID(){
