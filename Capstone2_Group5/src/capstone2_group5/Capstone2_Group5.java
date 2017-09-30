@@ -25,9 +25,11 @@ public class Capstone2_Group5{
     public static void main(String choice){
         // TODO code application logic here
         
-        
-        
-        GestureRecognizer basicRecognizer = new BasicRecognizer();
+
+//        GestureRecognizer basicRecognizer = new BasicRecognizer();
+        GestureRecognizer decisionTree = new AdvancedRecognizer();
+        DecisionTree.init();
+
         Thread mainThread = new Thread(new Runnable(){
             Boolean running = true;
             @Override
@@ -58,16 +60,13 @@ public class Capstone2_Group5{
                                         Gesture newGesture;
                                         try {
                                             newGesture = capturer.capture();
+                                            if(newGesture == null){
+                                                System.out.println("Invalid hand");
+                                                continue;
+                                            }
                                             System.out.println("Give your gesture a name!");
                                             String gestureName = INPUT.nextLine();
-                                            if(newGesture != null){
-                                                newGesture.name = gestureName;
-                                                Event gestureCreated = new Event("gestureCreated");
-                                                gestureCreated.details.put("gesture", newGesture);
-                                                gestureCreated.trigger();
-                                            } else {
-                                                System.out.println("Gesture is null");
-                                            }
+                                            newGesture.name = gestureName;
                                         } catch (Exception ex) {
                                             Logger.getLogger(Capstone2_Group5.class.getName()).log(Level.SEVERE, null, ex);
                                         }
@@ -76,10 +75,8 @@ public class Capstone2_Group5{
                             }
                             break;
                         case "2":
-                            int gesturePerformedId = Event.registerHandler("gesturePerformed", (Event event) -> {
-                                System.out.println("Gesture performed: " + event.get("gesture")); 
-                            });
-                            LeapService.start(basicRecognizer);
+//                            LeapService.start(basicRecognizer);
+                            LeapService.start(decisionTree);
                             break;
                         case "3":
                             TestSuite.run(); //MUST ADD -ea TO VM OPTIONS.  GO TO PROJECT PROPERTIES, RUN, VM OPTIONS

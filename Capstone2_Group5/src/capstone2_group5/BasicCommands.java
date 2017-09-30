@@ -20,10 +20,10 @@ public class BasicCommands {
     
     private int AutoDelay;
     
-    private Event Click = new Event("commandPerformed");
+    private Event Click = new Event(Event.TYPE.COMMAND_PERFORMED);
     private int ClickDelay;
-    private Event ClickHeld = new Event("commandPerformed");
-    private Event ClickReleased = new Event("commandPerformed");
+    private Event ClickHeld = new Event(Event.TYPE.COMMAND_PERFORMED);
+    private Event ClickReleased = new Event(Event.TYPE.COMMAND_PERFORMED);
     
     private Robot Command;
         
@@ -31,12 +31,12 @@ public class BasicCommands {
     private int CurrentY;
     
     private int KeyDelay;
-    private Event KeyHeld = new Event("commandPerformed");
-    private Event KeyPressed = new Event("commandPerformed");
-    private Event KeyReleased = new Event("commandPerformed");
+    private Event KeyHeld = new Event(Event.TYPE.COMMAND_PERFORMED);
+    private Event KeyPressed = new Event(Event.TYPE.COMMAND_PERFORMED);
+    private Event KeyReleased = new Event(Event.TYPE.COMMAND_PERFORMED);
     
     private int MoveDelay;
-    private Event MouseMoved = new Event("commandPerformed");
+    private Event MouseMoved = new Event(Event.TYPE.COMMAND_PERFORMED);
 
     private int pMulti;
     private boolean rightHand;
