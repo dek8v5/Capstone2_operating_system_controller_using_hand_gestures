@@ -13,8 +13,8 @@ import java.util.ArrayList;
  * @author Cameron
  */
 public class BasicRecognizer implements GestureRecognizer{
-    private Event thumbsUp = new Event("gesturePerformed");
-    private Event pointingWithIndex = new Event("gesturePerformed");
+    private Event thumbsUp = new Event(Event.TYPE.GESTURE_PERFORMED);
+    private Event pointingWithIndex = new Event(Event.TYPE.GESTURE_PERFORMED);
     private BasicCommands command = new BasicCommands();
     private ArrayList<Gesture> gestures = new ArrayList();
     
@@ -24,8 +24,8 @@ public class BasicRecognizer implements GestureRecognizer{
     public BasicRecognizer(){
         thumbsUp.addDetail("gesture", "thumbsUp");
         pointingWithIndex.addDetail("gesture", "pointingWithIndexFinger");
-        Event.registerHandler("gestureCreated", (Event event)->{
-            Gesture gesture = (Gesture)event.details.get("gesture");
+        Event.registerHandler(Event.TYPE.GESTURE_CAPTURED, (Event event)->{
+            Gesture gesture = (Gesture)event.get("gesture");
             gestures.add(gesture);
             System.out.println("Gesture <" + gesture.name + "> added to recognized gesture list");
         });
@@ -65,8 +65,8 @@ public class BasicRecognizer implements GestureRecognizer{
 //            System.out.println("3 second intervals");
             for(Gesture gesture : gestures){
                 if(gesture.performedIn(frame)){
-                    Event gesturePerformed = new Event("gesturePerformed");
-                    gesturePerformed.details.put("gesture", gesture.name);
+                    Event gesturePerformed = new Event(Event.TYPE.GESTURE_PERFORMED);
+                    gesturePerformed.addDetail("gesture", gesture.name);
                     gesturePerformed.trigger();
                 }
             }

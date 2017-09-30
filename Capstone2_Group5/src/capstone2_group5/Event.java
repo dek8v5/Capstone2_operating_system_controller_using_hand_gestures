@@ -13,17 +13,25 @@ import java.util.HashMap;
  */
 public class Event {
     private static Integer handlerID = 1;
-    private static HashMap<String, HashMap> eventHandlers = new HashMap<>();
-    private static HashMap<Integer, String> handlerIdToType = new HashMap<>();
+    private static HashMap<Event.TYPE, HashMap> eventHandlers = new HashMap();
+    private static HashMap<Integer, Event.TYPE> handlerIdToType = new HashMap();
+    
+    public enum TYPE{
+        COMMAND_PERFORMED,
+        GESTURE_CAPTURED,
+        GESTURE_PERFORMED,
+        LEAP_CONTROLLER_CONNECTED,
+        LEAP_CONTROLLER_DISCONNECTED,
+    }
     
     private static Integer getNextID(){
         return handlerID++;
     }
    
-    public static Integer registerHandler(String event, EventHandler handler){
+    public static Integer registerHandler(Event.TYPE event, EventHandler handler){
         Integer id = Event.getNextID();
         if(!eventHandlers.containsKey(event)){
-            HashMap<Integer, EventHandler> handlerHash = new HashMap<>();
+            HashMap<Integer, EventHandler> handlerHash = new HashMap();
             eventHandlers.put(event, handlerHash);
         }
         eventHandlers.get(event).put(id, handler);
@@ -36,16 +44,20 @@ public class Event {
     }
     
     public static void trigger(Event event){
-        eventHandlers.get(event.type).forEach((id, handler) -> {
-            EventHandler _handler = (EventHandler)handler;
-            _handler.handle(event);
-        });
+        if(eventHandlers.get(event.type) != null){
+            eventHandlers.get(event.type).forEach((id, handler) -> {
+                EventHandler _handler = (EventHandler)handler;
+                _handler.handle(event);
+            });
+        } else {
+            Debugger.print(event.type + " does not have any handlers");
+        }
     }
     
-    public String type;
-    public HashMap details = new HashMap();
+    public final Event.TYPE type;
+    private HashMap details = new HashMap();
     
-    public Event(String type){
+    public Event(Event.TYPE type){
         this.type = type;
     }
     
