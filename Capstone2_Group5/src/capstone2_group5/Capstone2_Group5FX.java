@@ -22,52 +22,29 @@ import javafx.stage.Stage;
  */
 public class Capstone2_Group5FX extends Application {
     
-    private EventListeners controller = new EventListeners();
-    
     @Override
     public void start(Stage primaryStage) {
-        Button btn = new Button();
-        btn.setText("Leave");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                    Capstone2_Group5.main("0");
-            }
-        });
-        btn.setAlignment(Pos.BOTTOM_RIGHT);
         
-        Button btn2 = new Button();
-        btn2.setText("Capture a Gesture");
-        btn2.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                    Capstone2_Group5.main("1");
-            }
+        Button StartBtn = new Button();
+        StartBtn.setText("Create New Gesture");
+        StartBtn.setOnAction((ActionEvent event) -> {
+            CreateGestureFX createGestureFX = new CreateGestureFX(primaryStage, primaryStage.getScene());
+            primaryStage.setScene(createGestureFX.getScene());
         });
-        btn2.setAlignment(Pos.BOTTOM_LEFT);
+        StartBtn.setAlignment(Pos.BOTTOM_RIGHT);
         
         Button btn3 = new Button();
         btn3.setText("Use Gestures");
-        btn3.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                    Capstone2_Group5.main("2");
-            }
+        btn3.setOnAction((ActionEvent event) -> {
+            Capstone2_Group5.main("2");
         });
         btn3.setAlignment(Pos.TOP_RIGHT);
         
                 
         Button btn4 = new Button();
         btn4.setText("Run Tests");
-        btn4.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                    Capstone2_Group5.main("3");
-            }
+        btn4.setOnAction((ActionEvent event) -> {
+            Capstone2_Group5.main("3");
         });
         btn4.setAlignment(Pos.TOP_LEFT);
         
@@ -78,16 +55,16 @@ public class Capstone2_Group5FX extends Application {
         root.setVgap(10);
         root.setPadding(new Insets(25, 25, 25, 25));
         
-        root.add(btn,0,1);
-        root.add(btn2,0,2);
+        root.add(StartBtn,0,1);
         root.add(btn3,0,3);
         root.add(btn4,0,4);
         
-        Scene scene = new Scene(root, 300, 275);
+        Scene scene = new Scene(root, 800, 775);
         
         primaryStage.setTitle("Select Page");
         primaryStage.setScene(scene);
         primaryStage.show();
+        
     }
 
     /**

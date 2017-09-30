@@ -20,3 +20,11 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/Capstone2_Group5/nbproject/private/
+/nbproject/private/
+/Capstone2_Group5/build/
+/Testing/nbproject/private/
+/JavaFXApplication1/nbproject/private/
+/JavaFXApplication1/dist/
+/JavaFXApplication1/build/
+/Capstone2_Group5/dist/
