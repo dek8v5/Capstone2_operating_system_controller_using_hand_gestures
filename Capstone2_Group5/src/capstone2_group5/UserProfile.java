@@ -47,6 +47,15 @@ public class UserProfile {
     public String getName(){
         return name;
     }
+    
+    public void printProfile(){
+        //System.out.println(Arrays.asList(profiles));
+        for(String name: profiles.keySet() ){
+            String key = name.toString();
+            String value = profiles.get(name).toString();
+            System.out.println(key);
+        }
+    }
   
     
 }
