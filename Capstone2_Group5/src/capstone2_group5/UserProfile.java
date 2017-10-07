@@ -13,69 +13,6 @@ import java.util.HashMap;
  * @author Cameron
  */
 public class UserProfile {
-    private static HashMap<String, UserProfile> namesToProfiles = new HashMap();
-    private static HashMap<UserProfile, UserSettings> profilesToSettings = new HashMap();
-    private static ArrayList<UserProfile> profiles = new ArrayList();
-    private static UserProfile currentUser;
-    private static Event switchedUser;
-    private static Event createdUser;
-    private static Event deletedUser;
-    private static OSControl osControl = Capstone2_Group5.getOSController();
-    
-    static{
-        switchedUser = new Event(Event.TYPE.USER_SWITCHED);
-        createdUser = new Event(Event.TYPE.USER_CREATED);
-        deletedUser = new Event(Event.TYPE.USER_DELETED);
-        UserProfile.loadProfiles();
-    }
-    
-    private String name;
-    private UserSettings settings;
-    
-    public static UserProfile create(String name) throws Exception{
-        if(namesToProfiles.containsKey(name)){
-            throw new Exception("Profile with name <" + name + "> already exists.");
-        }
-        UserProfile profile = new UserProfile();
-        profile.name = name;
-        namesToProfiles.put(name, profile);
-        return profile;
-    }
-    
-    public static ArrayList<UserProfile> getAllUsers(){
-        return profiles;
-    }
-    
-    private static void loadProfiles(){
-        System.out.println("TODO: load/store profiles");
-    }
-    
-    public static UserProfile setUser(String name) throws Exception{
-        if(!namesToProfiles.containsKey(name)){
-            throw new Exception("Profile with name <" + name + "> does not exist.");
-        }
-        currentUser = namesToProfiles.get(name);
-        return currentUser;
-    }
-    
-    public static void handleGesturePerformed(Gesture gesture){
-        if(currentUser != null){
-            Command command = currentUser.settings.getCommand(gesture);
-            osControl.performCommand(command);
-        }
-    }
-    
-    private UserProfile(){
-        //TODO: 
-    }
-    
-    public UserProfile(String name){
-        //TODO: load user profile
-    }
-    
-    public String getName(){
-        return name;
-    }
   
     
 }
