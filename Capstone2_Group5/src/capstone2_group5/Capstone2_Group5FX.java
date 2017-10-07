@@ -10,6 +10,14 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 /**
@@ -20,7 +28,6 @@ import javafx.stage.Stage;
 
 public class Capstone2_Group5FX extends Application {
     
-    //private EventListeners controller = new EventListeners();
     
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -116,18 +123,56 @@ public class Capstone2_Group5FX extends Application {
             public void handle(ActionEvent event) {
                     Capstone2_Group5.main(null);
             }
+
+    @Override
+    public void start(Stage primaryStage) {
+        
+        Button StartBtn = new Button();
+        StartBtn.setText("Create New Gesture");
+        StartBtn.setOnAction((ActionEvent event) -> {
+            CreateGestureFX createGestureFX = new CreateGestureFX(primaryStage, primaryStage.getScene());
+            primaryStage.setScene(createGestureFX.getScene());
         });
+        StartBtn.setAlignment(Pos.BOTTOM_RIGHT);
         
         
         
         StackPane root = new StackPane();
         root.getChildren().add(btn);
+
+        Button btn3 = new Button();
+        btn3.setText("Use Gestures");
+        btn3.setOnAction((ActionEvent event) -> {
+            Capstone2_Group5.main("2");
+        });
+        btn3.setAlignment(Pos.TOP_RIGHT);
         
-        Scene scene = new Scene(root, 300, 250);
+                
+        Button btn4 = new Button();
+        btn4.setText("Run Tests");
+        btn4.setOnAction((ActionEvent event) -> {
+            Capstone2_Group5.main("3");
+        });
+        btn4.setAlignment(Pos.TOP_LEFT);
+
         
-        primaryStage.setTitle("Basic Page");
+        GridPane root = new GridPane();
+        
+        root.setAlignment(Pos.CENTER);
+        root.setHgap(10);
+        root.setVgap(10);
+        root.setPadding(new Insets(25, 25, 25, 25));
+        
+        root.add(StartBtn,0,1);
+        root.add(btn3,0,3);
+        root.add(btn4,0,4);
+        
+        Scene scene = new Scene(root, 800, 775);
+        
+        primaryStage.setTitle("Select Page");
         primaryStage.setScene(scene);
         primaryStage.show();
+        
     }
 
     /**
@@ -138,16 +183,3 @@ public class Capstone2_Group5FX extends Application {
         launch(args);
     }
 }  
- /*   
-    private HBox addHBox(){
-       HBox hbox = new HBox();
-       hbox.setPadding(new Insets(20, 20, 20, 20)); //(top/right/bottom/left)
-       hbox.setSpacing(100);   // Gap between nodes
-       hbox.setStyle("-fx-background-color: #336699;");
-      
-       
-    return hbox;
-    }
-    
-}
-*/

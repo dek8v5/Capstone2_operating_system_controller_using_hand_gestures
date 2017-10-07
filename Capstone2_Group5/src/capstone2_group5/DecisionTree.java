@@ -24,7 +24,7 @@ public class DecisionTree {
     }
     
     public static void init(){
-        int gestureTrackerListener = Event.registerHandler("gestureCaptured", new EventHandler() {
+        int gestureTrackerListener = Event.registerHandler(Event.TYPE.GESTURE_CAPTURED, new EventHandler() {
             @Override
             public void handle(Event event) {
                 Gesture gesture = (Gesture)event.get("gesture");
@@ -302,6 +302,7 @@ public class DecisionTree {
         } else {
             return null;
         }
+
     }
     
     public static void view(){
@@ -309,4 +310,5 @@ public class DecisionTree {
         int i = 0;
 
     }
+
 }

@@ -22,23 +22,21 @@ public class Capstone2_Group5{
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args){
+    public static void main(String choice){
         // TODO code application logic here
         
+
 //        GestureRecognizer basicRecognizer = new BasicRecognizer();
         GestureRecognizer decisionTree = new AdvancedRecognizer();
         DecisionTree.init();
+
         Thread mainThread = new Thread(new Runnable(){
             Boolean running = true;
             @Override
             public void run() {
                 while(running){
-                    System.out.println("Select an option");
-                    System.out.println("0: Leave");
-                    System.out.println("1: Capture a gesture");
-                    System.out.println("2: Use gestures");
-                    System.out.println("3: Run tests");
-                    String next = INPUT.nextLine();
+
+                    String next = choice;
                     switch(next){
                         case "0":
                             LeapService.stop();
@@ -62,13 +60,13 @@ public class Capstone2_Group5{
                                         Gesture newGesture;
                                         try {
                                             newGesture = capturer.capture();
+                                            if(newGesture == null){
+                                                System.out.println("Invalid hand");
+                                                continue;
+                                            }
                                             System.out.println("Give your gesture a name!");
                                             String gestureName = INPUT.nextLine();
-                                            if(newGesture != null){
-                                                newGesture.name = gestureName;
-                                            } else {
-                                                System.out.println("Gesture is null");
-                                            }
+                                            newGesture.name = gestureName;
                                         } catch (Exception ex) {
                                             Logger.getLogger(Capstone2_Group5.class.getName()).log(Level.SEVERE, null, ex);
                                         }
