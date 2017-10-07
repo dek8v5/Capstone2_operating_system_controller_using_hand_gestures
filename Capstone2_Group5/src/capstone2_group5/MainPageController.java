@@ -5,14 +5,10 @@
  */
 package capstone2_group5;
 
-import static capstone2_group5.UserProfile.profiles;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -72,7 +68,7 @@ public class MainPageController implements Initializable {
     @FXML
     private TableColumn<BasicCommands, String> commandName;        
     
-    UserProfile newName;
+    String newName;
     
     //ObservableList<UserProfile> list = FXCollections.observableArrayList(
             
@@ -105,12 +101,15 @@ public class MainPageController implements Initializable {
                     testLabel.setText("your new profile name is empty");
                 }
                 else{
-                newName = UserProfile.create(profileName.getText());
+                    newName = profileName.getText();
+                    UserManager.createProfile(newName);
                 
-                System.out.println("----------------");
-                
-                newName.printProfile();
-                
+                    System.out.println("----------------");
+                    ArrayList<User> users;
+                    users = UserManager.getAllUsers();
+                    for(User user : users){
+                        System.out.println(user.getName());
+                    }
                 //System.out.println(newName.toString());
                 testLabel.setText("New profile " + profileName.getText() + " is created");
             

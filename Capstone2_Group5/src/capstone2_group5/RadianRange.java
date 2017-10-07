@@ -5,13 +5,11 @@
  */
 package capstone2_group5;
 
-import java.util.Objects;
-
 /**
  *
  * @author Cameron
  */
-public class RadianRange {
+public class RadianRange implements java.io.Serializable{
     public static Boolean debug = Capstone2_Group5.debug;
     static{
 //        debug = ;
