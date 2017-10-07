@@ -9,6 +9,6 @@ package capstone2_group5;
  *
  * @author Cameron
  */
-public class GesturePalm {
+public class GesturePalm implements java.io.Serializable{
     public VectorRange allowedVector;
 }

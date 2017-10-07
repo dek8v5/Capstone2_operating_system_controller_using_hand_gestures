@@ -9,6 +9,6 @@ package capstone2_group5;
  *
  * @author Cameron
  */
-public class UserSettings {
-    
+public interface OSControl {
+    public void performCommand(Command command);
 }
