@@ -16,7 +16,7 @@ public class GestureListener {
         gesturePerformedHandlerID = Event.registerHandler(Event.TYPE.GESTURE_PERFORMED, (event) -> {
             Gesture gesture = (Gesture)event.get("gesture");
             if(gesture != null){
-                UserProfile.handleGesturePerformed(gesture);
+                UserManager.handleGesturePerformed(gesture);
             }
         });
     }

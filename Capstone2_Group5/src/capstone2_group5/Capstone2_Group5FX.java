@@ -5,6 +5,8 @@
  */
 package capstone2_group5;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -70,7 +72,15 @@ public class Capstone2_Group5FX extends Application {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args){
+        
+        try {
+            UserManager.createProfile("Cameron");
+        } catch (Exception ex) {
+            Logger.getLogger(Capstone2_Group5FX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        UserManager.storeInFile();
+        
         launch(args);
     }
 }

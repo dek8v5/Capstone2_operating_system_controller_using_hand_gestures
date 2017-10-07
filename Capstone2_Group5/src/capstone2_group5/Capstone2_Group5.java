@@ -26,8 +26,6 @@ public class Capstone2_Group5{
     public static void main(String choice){
         // TODO code application logic here
         
-
-//        GestureRecognizer basicRecognizer = new BasicRecognizer();
         GestureRecognizer decisionTree = new AdvancedRecognizer();
         DecisionTree.init();
 

@@ -11,7 +11,7 @@ import com.leapmotion.leap.Vector;
  *
  * @author Cameron
  */
-public class VectorRange {
+public class VectorRange implements java.io.Serializable{
     private final RadianRange xRange;
     private final RadianRange yRange;
     private final RadianRange zRange;
