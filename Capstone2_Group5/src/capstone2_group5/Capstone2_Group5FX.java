@@ -143,7 +143,7 @@ public class Capstone2_Group5FX extends Application {
         Button btn3 = new Button();
         btn3.setText("Use Gestures");
         btn3.setOnAction((ActionEvent event) -> {
-            Capstone2_Group5.main("2");
+            Capstone2_Group5.main("2", null);
         });
         btn3.setAlignment(Pos.TOP_RIGHT);
         
@@ -151,7 +151,7 @@ public class Capstone2_Group5FX extends Application {
         Button btn4 = new Button();
         btn4.setText("Run Tests");
         btn4.setOnAction((ActionEvent event) -> {
-            Capstone2_Group5.main("3");
+            Capstone2_Group5.main("3", null);
         });
         btn4.setAlignment(Pos.TOP_LEFT);
 

@@ -22,7 +22,7 @@ public class Capstone2_Group5{
     /**
      * @param args the command line arguments
      */
-    public static void main(String choice){
+    public static void main(String choice, String name){
         // TODO code application logic here
         
 
@@ -48,29 +48,18 @@ public class Capstone2_Group5{
                             capturer = (GestureCapturer)recognizer;
                             LeapService.start(recognizer);
                             while(capturing){
-                                System.out.println("Place your hand in the desired gesture position and enter 1 to capture the gesture");
-                                System.out.println("Enter 0 to exit capture mode");
-                                String captureInput = INPUT.nextLine();
-                                switch(captureInput){
-                                    case "0":
-                                        capturing = false;
-                                        LeapService.stop();
-                                        break;
-                                    case "1":
-                                        Gesture newGesture;
-                                        try {
-                                            newGesture = capturer.capture();
-                                            if(newGesture == null){
-                                                System.out.println("Invalid hand");
-                                                continue;
-                                            }
-                                            System.out.println("Give your gesture a name!");
-                                            String gestureName = INPUT.nextLine();
-                                            newGesture.name = gestureName;
-                                        } catch (Exception ex) {
-                                            Logger.getLogger(Capstone2_Group5.class.getName()).log(Level.SEVERE, null, ex);
-                                        }
-                                        break;
+                                Gesture newGesture;
+                                try {
+                                    newGesture = capturer.capture();
+                                    if(newGesture == null){
+                                        System.out.println("Invalid hand");
+                                        continue;
+                                    }
+                                    String gestureName = name;
+                                    newGesture.name = gestureName;
+                                    break;
+                                } catch (Exception ex) {
+                                    Logger.getLogger(Capstone2_Group5.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                             }
                             break;

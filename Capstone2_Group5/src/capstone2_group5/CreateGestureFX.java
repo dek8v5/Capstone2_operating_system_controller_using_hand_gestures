@@ -8,11 +8,15 @@ package capstone2_group5;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
@@ -22,7 +26,7 @@ import javafx.stage.Stage;
 public class CreateGestureFX {
     
     private Scene scene;
-
+    
     public CreateGestureFX(Stage primaryStage, Scene primaryScene){
         
         Button btn1 = new Button();
@@ -35,7 +39,42 @@ public class CreateGestureFX {
         Button btn2 = new Button();
         btn2.setText("Capture a Gesture");
         btn2.setOnAction((ActionEvent event) -> {
-            Capstone2_Group5.main("1");
+            
+            Stage confirmStage = new Stage();
+            
+            Label label1 = new Label("Keep your hand above the Leap Motion Controller.");
+            
+            Button btn10 = new Button();
+            btn10.setText("Capture");
+            btn10.setOnAction((ActionEvent event1) -> {
+                Capstone2_Group5.main("1", null);
+            });
+            
+            Button btn11 = new Button();
+            btn11.setText("Cancel");
+            btn11.setOnAction((ActionEvent event1) -> {
+                confirmStage.close();
+            });
+            
+            GridPane confirmScreen = new GridPane();
+            confirmScreen.setAlignment(Pos.CENTER);
+            confirmScreen.setHgap(10);
+            confirmScreen.setVgap(10);
+            confirmScreen.setPadding(new Insets(10,10,10,10));
+            
+            confirmScreen.add(label1, 0, 0, 4, 1);
+            confirmScreen.add(btn10, 1, 1);
+            confirmScreen.add(btn11, 2, 1);
+            
+            Scene confirmScene = new Scene(confirmScreen, 400, 400);
+            
+            confirmStage.setScene(confirmScene);
+            confirmStage.show();
+            
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            confirmStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+            confirmStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
+            
         });
         btn2.setAlignment(Pos.BOTTOM_LEFT);
        
