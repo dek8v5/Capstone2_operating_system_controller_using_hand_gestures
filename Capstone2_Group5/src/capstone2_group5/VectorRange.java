@@ -11,7 +11,7 @@ import com.leapmotion.leap.Vector;
  *
  * @author Cameron
  */
-public class VectorRange implements java.io.Serializable{
+public class VectorRange implements ToJson{
     private final RadianRange xRange;
     private final RadianRange yRange;
     private final RadianRange zRange;
@@ -85,5 +85,10 @@ public class VectorRange implements java.io.Serializable{
     @Override
     public String toString(){
         return "{x: " + xRange + ", y: " + yRange + ", z: " + zRange + "}";
+    }
+
+    @Override
+    public String toJsonString() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -30,6 +30,7 @@ public class UserManager implements java.io.Serializable {
     private transient Event switchedUser;
     private transient Event createdUser;
     private transient Event deletedUser;
+    private transient Event userListChanged;
     
     private UserManager() throws Exception{
         if(numManagers == 0){
@@ -37,6 +38,7 @@ public class UserManager implements java.io.Serializable {
             switchedUser = new Event(Event.TYPE.USER_SWITCHED);
             createdUser = new Event(Event.TYPE.USER_CREATED);
             deletedUser = new Event(Event.TYPE.USER_DELETED);
+            userListChanged = new Event(Event.TYPE.USER_LIST_CHANGED);
             loadProfiles();
             manager = this;
         } else {
@@ -78,6 +80,7 @@ public class UserManager implements java.io.Serializable {
             throw new Exception("Invalid profile");
         }
         namesToProfiles.put(profile.getName(), profile);
+        userListChanged.trigger();
     }
     
     public static ArrayList<User> getAllUsers(){
@@ -144,6 +147,7 @@ public class UserManager implements java.io.Serializable {
             throw new Exception("User is not in the profile list");
         }
         User deleted = namesToProfiles.remove(name);
+        userListChanged.trigger();
         deletedUser.addDetail("user", deleted);
         deletedUser.trigger();
     }
@@ -158,6 +162,7 @@ public class UserManager implements java.io.Serializable {
             throw new Exception("User is not in the profile list");
         }
         namesToProfiles.remove(user.getName(), user);
+        userListChanged.trigger();
         deletedUser.addDetail("name", user);
         deletedUser.trigger();
     }
