@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -7,12 +7,13 @@ package capstone2_group5;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 /**
  *
  * @author Cameron
  */
-public class User implements ToJson {
+public class User extends JSON {
     private HashMap<Gesture, Command> gestureToCommand;
     private ArrayList<Gesture> gestures;
     private final String name;
@@ -40,10 +41,22 @@ public class User implements ToJson {
         return this.name;
     }
 
-    @Override
-    public String toJsonString() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+//    @Override
+//    public String toJsonString() {
+//        JSONObject thisJson = new JSONObject();
+//        JSONArray gesturesJson = new JSONArray(); 
+//        thisJson.put("name", name);
+//        for(Gesture gesture : gestures){
+//            gesturesJson.add(gesture.toJsonString());
+//        }
+//        thisJson.put("gestures", gesturesJson);
+//        JSONObject mapping = new JSONObject();
+//        for(Entry<Gesture, Command> entry : gestureToCommand.entrySet()){
+//            mapping.put(entry.getKey().name, entry.getValue());
+//        }
+//        thisJson.put("gestureToCommand", mapping);
+//        return thisJson.toJSONString();
+//    }
     
     public void addGesture(Gesture gesture) throws Exception{
         if(gesture == null){
@@ -75,5 +88,34 @@ public class User implements ToJson {
         if(command == null){
             throw new Exception("Command was null.  Cannot map gesture to null command");
         }
+        if(gesture == null){
+            //umm.... remove command from the mapping?
+            removeGestureFromCommand(command);
+        } else {
+            gestureToCommand.put(gesture, command);
+            userMappedGestureToCommand.addDetail("user", this);
+            userMappedGestureToCommand.addDetail("gesture", gesture);
+            userMappedGestureToCommand.addDetail("command", command);
+            userMappedGestureToCommand.trigger();
+        }
+    }
+    
+    public void removeGestureFromCommand(Command command){
+        if(gestureToCommand.containsValue(command)){
+            for(Entry<Gesture, Command> entry : gestureToCommand.entrySet()){
+                if(entry.getValue().equals(command)){
+                    gestureToCommand.remove(entry.getKey());
+                    userRemovedGestureFromCommand.addDetail("user", this);
+                    userRemovedGestureFromCommand.addDetail("gesture", entry.getKey());
+                    userRemovedGestureFromCommand.addDetail("command", entry.getValue());
+                    userRemovedGestureFromCommand.trigger();
+                    break;
+                }
+            }
+        }
+    }
+    
+    public ArrayList<Gesture> getGestures(){
+        return new ArrayList(gestures);
     }
 }

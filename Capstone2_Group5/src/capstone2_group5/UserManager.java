@@ -5,15 +5,7 @@
  */
 package capstone2_group5;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.logging.Level;
 
 /**
@@ -25,7 +17,8 @@ public class UserManager implements java.io.Serializable {
     private static UserManager manager;
     private static final OSControl osControl = Capstone2_Group5.getOSController();
     
-    private final HashMap<String, User> namesToProfiles = new HashMap();
+//    private final HashMap<String, User> namesToProfiles = new HashMap();
+    private ArrayList<User> users = new ArrayList();
     private User currentUser;
     private transient Event switchedUser;
     private transient Event createdUser;
@@ -65,8 +58,10 @@ public class UserManager implements java.io.Serializable {
         if(name.equals("")){
             throw new Exception("Name must not be empty.");
         }
-        if(namesToProfiles.containsKey(name)){
-            throw new Exception("Profile with name <" + name + "> already exists.");
+        for(User user : users){
+            if(user.getName().equals(name)){
+                throw new Exception("Profile with name <" + name + "> already exists.");
+            }
         }
         User profile = new User(name);
         addProfile(profile);
@@ -79,7 +74,7 @@ public class UserManager implements java.io.Serializable {
         if(profile == null){
             throw new Exception("Invalid profile");
         }
-        namesToProfiles.put(profile.getName(), profile);
+        users.add(profile);
         userListChanged.trigger();
     }
     
@@ -89,7 +84,7 @@ public class UserManager implements java.io.Serializable {
     }
     
     private ArrayList<User> _getAllUsers(){
-        return new ArrayList(namesToProfiles.values());
+        return new ArrayList(users);
     }
     
     private void loadProfiles(){
@@ -102,14 +97,18 @@ public class UserManager implements java.io.Serializable {
     }
     
     private void _setCurrentUser(String name) throws Exception{
-        if(!namesToProfiles.containsKey(name)){
-            throw new Exception("Profile with name <" + name + "> does not exist.");
+        Boolean switched = false;
+        for(User user : users){
+            if(user.getName().equals(name)){
+                currentUser = user;
+                switchedUser.addDetail("user", currentUser);
+                switchedUser.trigger();
+                switched = true;
+                break;
+            }
         }
-        User user = namesToProfiles.get(name);
-        if(user != currentUser){
-            currentUser = namesToProfiles.get(name);
-            switchedUser.addDetail("user", currentUser);
-            switchedUser.trigger();
+        if(!switched){
+            throw new Exception("Profile with name <" + name + "> does not exist.");
         }
     }
     
@@ -119,8 +118,8 @@ public class UserManager implements java.io.Serializable {
     }
     
     private void _setCurrentUser(User user) throws Exception{
-        if(!namesToProfiles.containsValue(user)){
-            throw new Exception("Profile " + user + " does not exist");
+        if(!users.contains(user)){
+            throw new Exception("Profile " + user.getName() + " does not exist");
         }
         if(user != currentUser){
             currentUser = user;
@@ -137,19 +136,41 @@ public class UserManager implements java.io.Serializable {
         }
     }
     
+    public static User getCurrentUser(){
+        initializeManager();
+        return manager._getCurrentUser();
+    }
+    
+    public User _getCurrentUser(){
+        return currentUser;
+    }
+    
+    public ArrayList<Gesture> getGesturesForCurrentUser(){
+        if(currentUser != null){
+            return currentUser.getGestures();
+        } else {
+            return null;
+        }
+    }
+    
     public static void deleteUser(String name) throws Exception{
         initializeManager();
         manager._deleteUser(name);
     }
     
     private void _deleteUser(String name) throws Exception{
-        if(!namesToProfiles.containsKey(name)){
+        Boolean deleted = false;
+        for(User user : users){
+            if(user.getName().equals(name)){
+                deleted = users.remove(user);
+                userListChanged.trigger();
+                deletedUser.addDetail("user", user);
+                deletedUser.trigger();
+            }
+        }
+        if(!deleted){
             throw new Exception("User is not in the profile list");
         }
-        User deleted = namesToProfiles.remove(name);
-        userListChanged.trigger();
-        deletedUser.addDetail("user", deleted);
-        deletedUser.trigger();
     }
     
     public static void deleteUser(User user) throws Exception{
@@ -158,10 +179,10 @@ public class UserManager implements java.io.Serializable {
     }
     
     private void _deleteUser(User user) throws Exception{
-        if(!namesToProfiles.containsValue(user)){
+        if(!users.contains(user)){
             throw new Exception("User is not in the profile list");
         }
-        namesToProfiles.remove(user.getName(), user);
+        users.remove(user);
         userListChanged.trigger();
         deletedUser.addDetail("name", user);
         deletedUser.trigger();
