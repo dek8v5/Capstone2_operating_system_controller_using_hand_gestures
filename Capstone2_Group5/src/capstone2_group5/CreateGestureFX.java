@@ -47,7 +47,7 @@ public class CreateGestureFX {
             Button btn10 = new Button();
             btn10.setText("Capture");
             btn10.setOnAction((ActionEvent event1) -> {
-                Capstone2_Group5.main("1", null);
+                Capstone2_Group5.main("1");
             });
             
             Button btn11 = new Button();

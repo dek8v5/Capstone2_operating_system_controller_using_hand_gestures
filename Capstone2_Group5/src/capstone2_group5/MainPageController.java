@@ -25,6 +25,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
+import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -65,7 +67,6 @@ public class MainPageController implements Initializable {
     @FXML
     private TableView gestureMappingTable;
     
-    
     @FXML
     private TableColumn<Gesture, String> gestureName;
     
@@ -77,11 +78,38 @@ public class MainPageController implements Initializable {
     //ObservableList<UserProfile> list = FXCollections.observableArrayList(
             
     //);
+    @FXML
+    private void handleNewGesture(ActionEvent event) throws IOException, Exception{
+        if(event.getSource() == btnNewGesture){
+            
+            Stage stage = (Stage) btnNewGesture.getScene().getWindow();
+            
+            Parent gesturePage = FXMLLoader.load(getClass().getResource("GesturePage.fxml"));
+            Scene scene = new Scene(gesturePage);
+            
+            stage.setScene(scene);
+            stage.show();
+            /*
+            WebView browser = new WebView();
+            URL url = getClass().getResource("VisualiserHTML.html");
+            browser.getEngine().load(url.toExternalForm());
+            
+            Stage helpstage = new Stage();
+            Scene helpscene = new Scene(browser);
+            
+            
+            helpstage.setScene(helpscene);
+            helpstage.show();
+            */
+            
+        }  
+    }
     
     @FXML
     private void handleNewProfile(ActionEvent event) throws IOException, Exception{
         Stage stage; 
         Parent root;
+        
         if(event.getSource()==btnNewProfile){
             stage = new Stage();
             //load up OTHER FXML document

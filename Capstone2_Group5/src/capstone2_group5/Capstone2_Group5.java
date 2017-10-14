@@ -22,7 +22,7 @@ public class Capstone2_Group5{
     /**
      * @param args the command line arguments
      */
-    public static void main(String choice, String name){
+    public static void main(String choice){
         // TODO code application logic here
         
 
@@ -43,25 +43,23 @@ public class Capstone2_Group5{
                             running = false;
                             break;
                         case "1":
-                            capturing = true;
+                            /*
                             GestureRecognizer recognizer = new GestureCapturer();
                             capturer = (GestureCapturer)recognizer;
                             LeapService.start(recognizer);
-                            while(capturing){
-                                Gesture newGesture;
+                            Gesture newGesture;
                                 try {
                                     newGesture = capturer.capture();
                                     if(newGesture == null){
                                         System.out.println("Invalid hand");
-                                        continue;
                                     }
-                                    String gestureName = name;
-                                    newGesture.name = gestureName;
-                                    break;
+                                    newGesture.name = "Placeholder";
+
+                                    
                                 } catch (Exception ex) {
-                                    Logger.getLogger(Capstone2_Group5.class.getName()).log(Level.SEVERE, null, ex);
+                                    Logger.getLogger(Capstone2_Group5.class.getName()).log(Level.SEVERE, "null", ex);
                                 }
-                            }
+                                */
                             break;
                         case "2":
 //                            LeapService.start(basicRecognizer);

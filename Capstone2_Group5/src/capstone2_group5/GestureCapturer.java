@@ -24,8 +24,10 @@ public class GestureCapturer implements GestureRecognizer{
     public GestureCapturer(){
     }
     
-    public Gesture capture() throws Exception{
+    public Gesture capture()throws Exception{
+        
         capturedFrame = lastFrame;
+
         Hand hand = capturedFrame.hands().frontmost();
         if(hand == null || !hand.isValid()){
             return null;
