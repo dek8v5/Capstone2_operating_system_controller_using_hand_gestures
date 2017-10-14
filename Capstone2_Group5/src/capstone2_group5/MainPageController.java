@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -49,6 +51,8 @@ public class MainPageController implements Initializable {
     @FXML
     private TextField profileName;
     
+    
+    
     @FXML
     private Label testLabel;
     
@@ -57,73 +61,86 @@ public class MainPageController implements Initializable {
     
     @FXML
     private ComboBox<String> comboName;
+
+
     
     @FXML
     private TableView gestureMappingTable;
     
-    
-    @FXML
-    private TableColumn<Gesture, String> gestureName;
-    
-    @FXML
-    private TableColumn<BasicCommands, String> commandName;        
-    
     String newName;
     
+    String namelist;
+    
+    ArrayList<User> users;
+    int profileListChangedHandlerId = Event.registerHandler(Event.TYPE.USER_LIST_CHANGED, (event) -> {
+        this.populateProfileList();
+    });
     //ObservableList<UserProfile> list = FXCollections.observableArrayList(
             
     //);
     
+    
+         
+    
     @FXML
     private void handleNewProfile(ActionEvent event) throws IOException, Exception{
-        Stage stage; 
-        Parent root;
-        if(event.getSource()==btnNewProfile){
-            stage = new Stage();
-            //load up OTHER FXML document
-            root = FXMLLoader.load(getClass().getResource("newProfile.fxml"));
-            stage.setScene(new Scene(root));
-            stage.setTitle("Create New Profile");
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initOwner(btnNewProfile.getScene().getWindow());
-            stage.showAndWait();
+       showNewProfile();
+        
+    }
+    
+    @FXML
+    private void handleSaveNewProfile(ActionEvent event) throws IOException, Exception{
+        if((profileName.getText()).isEmpty()){
+            testLabel.setText("New profile name is empty");
         }
         else
         {
-            if(event.getSource() == btnProfileCancel){
-                stage = (Stage)btnProfileCancel.getScene().getWindow();
-                stage.close();
+        newName = profileName.getText();
+        UserManager.createProfile(newName);
+        users = UserManager.getAllUsers();
+            //print all names on lists
+            for(User user : users){
+                System.out.println(user.getName());
             }
-            if(event.getSource() == btnProfileSave){
-                //System.out.println("Dewi");
-                //stage = (Stage)btnProfileSave.getScene().getWindow();
-                if((profileName.getText()).isEmpty()){
-                    testLabel.setText("your new profile name is empty");
-                }
-                else{
-                    newName = profileName.getText();
-                    UserManager.createProfile(newName);
-                
-                    System.out.println("----------------");
-                    ArrayList<User> users;
-                    users = UserManager.getAllUsers();
-                    for(User user : users){
-                        System.out.println(user.getName());
-                    }
-                //System.out.println(newName.toString());
-                testLabel.setText("New profile " + profileName.getText() + " is created");
-            
-                //stage=(Stage) profileCancel.getScene().getWindow();
-                //root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-                }
-            } 
+        //testLabel.setText("New profile " + profileName.getText() + " is created");    
+        populateProfileList();
         }
+        
+        hideNewProfile();
+    }
+         
+    @FXML
+    private void handleCancelNewProfile(ActionEvent event) throws IOException, Exception{
+        hideNewProfile();
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        hideNewProfile();
+        populateProfileList();  
+    }
+    
+    
+    public void populateProfileList(){
        
-    }    
+        comboName.getItems().removeAll(comboName.getItems());
+        users = UserManager.getAllUsers();
+        for(User user : users){               
+            comboName.getItems().add(user.getName()); 
+        }
+    }
+    
+    public void hideNewProfile(){
+        profileName.setVisible(false);
+        btnProfileCancel.setVisible(false);
+        btnProfileSave.setVisible(false);
+    }
+    
+    public void showNewProfile(){
+        profileName.setVisible(true);
+        btnProfileCancel.setVisible(true);
+        btnProfileSave.setVisible(true); 
+    }
 }
 
  
