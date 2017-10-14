@@ -11,7 +11,7 @@ import com.leapmotion.leap.*;
  *
  * @author Cameron
  */
-public class Gesture extends DecisionTreeNode implements java.io.Serializable{
+public class Gesture extends DecisionTreeNode{
     public static Boolean debug = Capstone2_Group5.debug;
     
     public String name;

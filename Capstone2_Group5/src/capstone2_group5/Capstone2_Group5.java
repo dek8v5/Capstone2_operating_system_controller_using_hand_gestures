@@ -27,7 +27,7 @@ public class Capstone2_Group5{
         // TODO code application logic here
         
         GestureRecognizer decisionTree = new AdvancedRecognizer();
-        DecisionTree.init();
+//        DecisionTree.init();
 
         Thread mainThread = new Thread(new Runnable(){
             Boolean running = true;
@@ -42,36 +42,23 @@ public class Capstone2_Group5{
                             running = false;
                             break;
                         case "1":
-                            capturing = true;
+                            /*
                             GestureRecognizer recognizer = new GestureCapturer();
                             capturer = (GestureCapturer)recognizer;
                             LeapService.start(recognizer);
-                            while(capturing){
-                                System.out.println("Place your hand in the desired gesture position and enter 1 to capture the gesture");
-                                System.out.println("Enter 0 to exit capture mode");
-                                String captureInput = INPUT.nextLine();
-                                switch(captureInput){
-                                    case "0":
-                                        capturing = false;
-                                        LeapService.stop();
-                                        break;
-                                    case "1":
-                                        Gesture newGesture;
-                                        try {
-                                            newGesture = capturer.capture();
-                                            if(newGesture == null){
-                                                System.out.println("Invalid hand");
-                                                continue;
-                                            }
-                                            System.out.println("Give your gesture a name!");
-                                            String gestureName = INPUT.nextLine();
-                                            newGesture.name = gestureName;
-                                        } catch (Exception ex) {
-                                            Logger.getLogger(Capstone2_Group5.class.getName()).log(Level.SEVERE, null, ex);
-                                        }
-                                        break;
+                            Gesture newGesture;
+                                try {
+                                    newGesture = capturer.capture();
+                                    if(newGesture == null){
+                                        System.out.println("Invalid hand");
+                                    }
+                                    newGesture.name = "Placeholder";
+
+                                    
+                                } catch (Exception ex) {
+                                    Logger.getLogger(Capstone2_Group5.class.getName()).log(Level.SEVERE, "null", ex);
                                 }
-                            }
+                                */
                             break;
                         case "2":
 //                            LeapService.start(basicRecognizer);
