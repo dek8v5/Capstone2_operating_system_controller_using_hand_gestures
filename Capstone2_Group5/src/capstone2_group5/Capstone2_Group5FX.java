@@ -31,16 +31,16 @@ import javafx.stage.Stage;
 public class Capstone2_Group5FX extends Application {
     
     
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
-        
-        Scene scene = new Scene(root);
-        
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        
-    }
+//    @Override
+//    public void start(Stage primaryStage) throws Exception {
+//        Parent root = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
+//        
+//        Scene scene = new Scene(root);
+//        
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
+//        
+//    }
         
         
         /* 
@@ -106,25 +106,25 @@ public class Capstone2_Group5FX extends Application {
         primaryStage.show();
     }
 
+*/
 
 
-
-/*public class Capstone2_Group5FX extends Application {
+//public class Capstone2_Group5FX extends Application {
     
     private EventListeners controller = new EventListeners();
     
-    @Override
-    public void start(Stage primaryStage) {
-       
-        
-        Button btn = new Button();
-        btn.setText("Start the thing");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                    Capstone2_Group5.main(null);
-            }
+//    @Override
+//    public void start(Stage primaryStage) {
+//       
+//        
+//        Button btn = new Button();
+//        btn.setText("Start the thing");
+//        btn.setOnAction(new EventHandler<ActionEvent>() {
+//            
+//            @Override
+//            public void handle(ActionEvent event) {
+//                    Capstone2_Group5.main(null);
+//            }
 
     @Override
     public void start(Stage primaryStage) {
@@ -139,8 +139,8 @@ public class Capstone2_Group5FX extends Application {
         
         
         
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
+//        StackPane root = new StackPane();
+//        root.getChildren().add(btn);
 
         Button btn3 = new Button();
         btn3.setText("Use Gestures");

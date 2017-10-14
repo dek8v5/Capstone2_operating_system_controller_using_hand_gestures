@@ -167,6 +167,48 @@ public class UserManager implements java.io.Serializable {
         deletedUser.trigger();
     }
     
+    public static void addGestureToCurrentUser(Gesture gesture) throws Exception{
+        initializeManager();
+        manager._addGestureToCurrentUser(gesture);
+    }
+    
+    private void _addGestureToCurrentUser(Gesture gesture) throws Exception{
+        if(gesture == null){
+            throw new Exception("Gesture was null.  Cannot add to current user.");
+        }
+        checkIfCurrentUserIsSet();
+        currentUser.addGesture(gesture);
+    }
+    
+    public static void removeGestureFromCurrentUser(Gesture gesture) throws Exception{
+        initializeManager();
+        manager._removeGestureFromCurrentUser(gesture);
+    }
+    
+    private void _removeGestureFromCurrentUser(Gesture gesture) throws Exception{
+        if(gesture == null){
+            throw new Exception("Cannot remove null gesture from user");
+        }
+        checkIfCurrentUserIsSet();
+        currentUser.removeGesture(gesture);
+    }
+    
+    public static void mapGestureToCommand(Gesture gesture, Command command) throws Exception{
+        initializeManager();
+        manager._mapGestureToCommand(gesture, command);
+    }
+    
+    private void _mapGestureToCommand(Gesture gesture, Command command) throws Exception{
+        checkIfCurrentUserIsSet();
+        currentUser.mapCommandToGesture(command, gesture);
+    }
+    
+    private void checkIfCurrentUserIsSet() throws Exception{
+        if(currentUser == null){
+            throw new Exception("No user selected");
+        }
+    }
+    
     public static void storeInFile(){
         initializeManager();
 //        Path file = Paths.get("the-file-name.txt");

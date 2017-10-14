@@ -32,7 +32,8 @@ public class Event {
         USER_ADDED_GESTURE,
         USER_REMOVED_GESTURE,
         USER_MAPPED_GESTURE_TO_COMMAND,
-        USER_REMOVED_GESTURE_FROM_COMMAND
+        USER_REMOVED_GESTURE_FROM_COMMAND,
+        GESTURES_TOO_SIMILAR,
     }
     
     private static Integer getNextID(){

@@ -7,6 +7,7 @@ package capstone2_group5;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 /**
  *
@@ -74,6 +75,15 @@ public class User implements ToJson {
     public void mapCommandToGesture(Command command, Gesture gesture) throws Exception{
         if(command == null){
             throw new Exception("Command was null.  Cannot map gesture to null command");
+        }
+        if(gesture == null && gestureToCommand.containsValue(command)){
+            for(Entry<Gesture, Command> entry : gestureToCommand.entrySet()){
+                if(entry.getValue().equals(command)){
+                    gestureToCommand.remove(entry.getKey());
+                }
+            }
+        } else {
+            gestureToCommand.put(gesture, command);
         }
     }
 }
