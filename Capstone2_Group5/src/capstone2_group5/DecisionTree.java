@@ -20,12 +20,9 @@ public class DecisionTree {
     private static DecisionTreeNode root;
     private static ArrayList<Gesture> gestureList = new ArrayList();
     private static Event gesturesTooSimilar = new Event(Event.TYPE.GESTURES_TOO_SIMILAR);
-    
-    private DecisionTree(){
-    }
-    
-    public static void init(){
-        int tooSimilarListener = Event.registerHandler(Event.TYPE.GESTURES_TOO_SIMILAR, new EventHandler() {
+    private static int tooSimilarListener;
+    static{
+        tooSimilarListener = Event.registerHandler(Event.TYPE.GESTURES_TOO_SIMILAR, new EventHandler() {
             @Override
             public void handle(Event event){
                 System.out.print("Gestures are too similar: ");
@@ -37,19 +34,9 @@ public class DecisionTree {
                 }
             }
         });
-//        int gestureTrackerListener = Event.registerHandler(Event.TYPE.GESTURE_CAPTURED, new EventHandler() {
-//            @Override
-//            public void handle(Event event) {
-//                Gesture gesture = (Gesture)event.get("gesture");
-//                gestureList.add(gesture);
-//                try {
-//                    DecisionTree.create(gestureList);
-//                    System.out.println("Gesture captured and added to decision tree");
-//                } catch (Exception ex) {
-//                    Logger.getLogger(DecisionTree.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//        });
+    }
+    
+    private DecisionTree(){
     }
     
     public enum Attribute{
