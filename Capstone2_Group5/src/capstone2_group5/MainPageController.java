@@ -9,22 +9,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -50,8 +42,6 @@ public class MainPageController implements Initializable {
     
     @FXML
     private TextField profileName;
-    
-    
     
     @FXML
     private Label testLabel;
@@ -90,11 +80,7 @@ public class MainPageController implements Initializable {
     
     @FXML
     private void handleSaveNewProfile(ActionEvent event) throws IOException, Exception{
-        if((profileName.getText()).isEmpty()){
-            testLabel.setText("New profile name is empty");
-        }
-        else
-        {
+
         newName = profileName.getText();
         UserManager.createProfile(newName);
         users = UserManager.getAllUsers();
@@ -104,8 +90,6 @@ public class MainPageController implements Initializable {
             }
         //testLabel.setText("New profile " + profileName.getText() + " is created");    
         populateProfileList();
-        }
-        
         hideNewProfile();
     }
          
