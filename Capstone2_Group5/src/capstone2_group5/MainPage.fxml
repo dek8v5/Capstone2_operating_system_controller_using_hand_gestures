@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -18,13 +19,13 @@
          <children>
             <ImageView fitHeight="59.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@logo.png" />
+                  <Image url="@../images/logo.png" />
                </image>
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
             </ImageView>
-            <ComboBox prefWidth="150.0" promptText="Select Profile">
+            <ComboBox fx:id="comboName" prefWidth="150.0" promptText="Select Profile">
                <HBox.margin>
                   <Insets left="213.0" right="213.0" />
                </HBox.margin>
@@ -38,7 +39,7 @@
       </HBox>
       <TableView layoutX="32.0" layoutY="152.0" prefHeight="379.0" prefWidth="368.0">
          <columns>
-            <TableColumn prefWidth="184.0" text="Gesture Name" />
+            <TableColumn prefWidth="184.0" text="Gesture" />
             <TableColumn prefWidth="183.0" text="Action" />
          </columns>
       </TableView>
@@ -48,19 +49,19 @@
          </font>
       </Label>
       <Button fx:id="btnNewGesture" layoutX="32.0" layoutY="547.0" mnemonicParsing="false" text="Create New Gesture" />
-      <ImageView fitHeight="288.0" fitWidth="345.0" layoutX="456.0" layoutY="152.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="288.0" fitWidth="345.0" layoutX="456.0" layoutY="266.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@Leap%20Motion%20Diagnostic%20Visualizer_0441.png" />
+            <Image url="@../images/Leap%20Motion%20Diagnostic%20Visualizer_0441.png" />
          </image>
       </ImageView>
-      <Label layoutX="473.0" layoutY="122.0" text="Corresponding Gesture">
+      <Label layoutX="456.0" layoutY="238.0" text="Corresponding Gesture">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
       <HBox alignment="CENTER_RIGHT" layoutY="603.0" prefHeight="47.0" prefWidth="820.0" style="-fx-background-color: #336699;">
          <children>
-            <Button alignment="TOP_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" text="Start" />
+            <Button alignment="TOP_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" text="Enable Gesture" />
             <Button alignment="BASELINE_CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="Cancel" textAlignment="CENTER">
                <HBox.margin>
                   <Insets left="10.0" right="15.0" />
@@ -69,5 +70,12 @@
          </children>
       </HBox>
       <Label fx:id="nameLabelTest" layoutX="456.0" layoutY="438.0" text="  " />
+      <Button layoutX="456.0" layoutY="171.0" mnemonicParsing="false" text="Connect" />
+      <Label layoutX="456.0" layoutY="148.0" text="Your leap motion is" />
+      <Label layoutX="570.0" layoutY="148.0" prefHeight="17.0" prefWidth="33.0" />
+      <TextField fx:id="profileName" layoutX="511.0" layoutY="84.0" promptText="New Profile Name" />
+      <Button fx:id="btnProfileSave" layoutX="687.0" layoutY="84.0" mnemonicParsing="false" onAction="#handleSaveNewProfile" text="Save" />
+      <Button fx:id="btnProfileCancel" layoutX="747.0" layoutY="84.0" mnemonicParsing="false" onAction="#handleCancelNewProfile" text="Cancel" />
+      <Label fx:id="testLabel" layoutX="199.0" layoutY="89.0" />
    </children>
 </AnchorPane>

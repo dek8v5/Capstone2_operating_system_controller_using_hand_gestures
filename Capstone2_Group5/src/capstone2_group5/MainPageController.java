@@ -64,13 +64,7 @@ public class MainPageController implements Initializable {
     ArrayList<User> users;
     int profileListChangedHandlerId = Event.registerHandler(Event.TYPE.USER_LIST_CHANGED, (event) -> {
         this.populateProfileList();
-    });
-    //ObservableList<UserProfile> list = FXCollections.observableArrayList(
-            
-    //);
-    
-    
-         
+    });  
     
     @FXML
     private void handleNewProfile(ActionEvent event) throws IOException, Exception{

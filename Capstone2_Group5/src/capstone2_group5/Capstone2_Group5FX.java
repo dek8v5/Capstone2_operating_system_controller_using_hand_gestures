@@ -18,6 +18,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -34,8 +35,10 @@ public class Capstone2_Group5FX extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
-        
+       
         Scene scene = new Scene(root);
+        
+        
         
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -184,11 +187,14 @@ public class Capstone2_Group5FX extends Application {
         
         try {
             UserManager.createProfile("Cameron");
+            UserManager.createProfile("Dewi");
+            UserManager.createProfile("Alec");
         } catch (Exception ex) {
             Logger.getLogger(Capstone2_Group5FX.class.getName()).log(Level.SEVERE, null, ex);
         }
         UserManager.storeInFile();
         
         launch(args);
+    
     }
 }  

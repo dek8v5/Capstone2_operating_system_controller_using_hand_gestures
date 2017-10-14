@@ -28,6 +28,7 @@ public class Event {
         USER_SWITCHED,
         USER_CREATED,
         USER_DELETED,
+        USER_LIST_CHANGED,
     }
     
     private static Integer getNextID(){
