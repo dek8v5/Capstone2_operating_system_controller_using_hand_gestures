@@ -29,6 +29,10 @@ public class Event {
         USER_CREATED,
         USER_DELETED,
         USER_LIST_CHANGED,
+        USER_ADDED_GESTURE,
+        USER_REMOVED_GESTURE,
+        USER_MAPPED_GESTURE_TO_COMMAND,
+        USER_REMOVED_GESTURE_FROM_COMMAND
     }
     
     private static Integer getNextID(){

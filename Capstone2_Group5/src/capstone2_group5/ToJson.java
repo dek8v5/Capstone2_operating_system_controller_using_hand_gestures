@@ -9,6 +9,6 @@ package capstone2_group5;
  *
  * @author Cameron
  */
-public class GesturePalm extends JSON{
-    public VectorRange allowedVector;
+public interface ToJson {
+    public String toJsonString();
 }
