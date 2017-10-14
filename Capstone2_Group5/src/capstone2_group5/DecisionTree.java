@@ -24,19 +24,19 @@ public class DecisionTree {
     }
     
     public static void init(){
-        int gestureTrackerListener = Event.registerHandler(Event.TYPE.GESTURE_CAPTURED, new EventHandler() {
-            @Override
-            public void handle(Event event) {
-                Gesture gesture = (Gesture)event.get("gesture");
-                gestureList.add(gesture);
-                try {
-                    DecisionTree.create(gestureList);
-                    System.out.println("Gesture captured and added to decision tree");
-                } catch (Exception ex) {
-                    Logger.getLogger(DecisionTree.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
+//        int gestureTrackerListener = Event.registerHandler(Event.TYPE.GESTURE_CAPTURED, new EventHandler() {
+//            @Override
+//            public void handle(Event event) {
+//                Gesture gesture = (Gesture)event.get("gesture");
+//                gestureList.add(gesture);
+//                try {
+//                    DecisionTree.create(gestureList);
+//                    System.out.println("Gesture captured and added to decision tree");
+//                } catch (Exception ex) {
+//                    Logger.getLogger(DecisionTree.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        });
     }
     
     public enum Attribute{

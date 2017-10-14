@@ -9,7 +9,7 @@ package capstone2_group5;
  *
  * @author Cameron
  */
-public class RadianRange implements java.io.Serializable{
+public class RadianRange extends JSON{
     public static Boolean debug = Capstone2_Group5.debug;
     static{
 //        debug = ;
