@@ -18,15 +18,14 @@ public class Capstone2_Group5{
     private static GestureCapturer capturer;
     private static Boolean capturing = false;
     private static final Scanner INPUT = new Scanner(System.in);
+    private static final OSControl osControl = new BasicCommands();
 
     /**
-     * @param args the command line arguments
+     * @param choice the command line argument
      */
     public static void main(String choice){
         // TODO code application logic here
         
-
-//        GestureRecognizer basicRecognizer = new BasicRecognizer();
         GestureRecognizer decisionTree = new AdvancedRecognizer();
         DecisionTree.init();
 
@@ -77,5 +76,9 @@ public class Capstone2_Group5{
             }
         });
         mainThread.start();
+    }
+    
+    public static OSControl getOSController(){
+        return osControl;
     }
 }

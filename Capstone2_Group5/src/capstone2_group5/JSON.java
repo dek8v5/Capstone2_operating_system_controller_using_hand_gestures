@@ -9,6 +9,12 @@ package capstone2_group5;
  *
  * @author Cameron
  */
-public class GesturePalm extends JSON{
-    public VectorRange allowedVector;
+public class JSON {
+//    public String toJsonString(){
+//        for(Field field : this.getClass().getDeclaredFields()){
+//            if(field.getClass().equals(JSON.class)){
+//                
+//            }
+//        }
+//    }
 }

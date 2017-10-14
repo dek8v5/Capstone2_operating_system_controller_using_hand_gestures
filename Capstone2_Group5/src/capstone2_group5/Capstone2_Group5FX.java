@@ -6,6 +6,8 @@
 
 package capstone2_group5;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -39,8 +41,18 @@ public class Capstone2_Group5FX extends Application{
         primaryStage.show();
         
     }
-   
-    public static void main(String[] args) {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args){
+        
+        try {
+            UserManager.createProfile("Cameron");
+        } catch (Exception ex) {
+            Logger.getLogger(Capstone2_Group5FX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        UserManager.storeInFile();
         launch(args);
     }
 }  

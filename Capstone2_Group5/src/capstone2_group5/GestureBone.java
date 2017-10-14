@@ -11,7 +11,7 @@ import com.leapmotion.leap.Bone;
  *
  * @author Cameron
  */
-public class GestureBone {
+public class GestureBone extends JSON{
     public static Boolean debug = Capstone2_Group5.debug;
     private Bone.Type type;
     public VectorRange allowedDirection;

@@ -78,11 +78,11 @@ public class CreateGestureFX {
         });
         btn2.setAlignment(Pos.BOTTOM_LEFT);
        
-        Image image = new Image("/test.jpg");
-        ImageView iv1 = new ImageView();
-        iv1.setImage(image);
-        iv1.setFitWidth(375);
-        iv1.setFitHeight(600);
+//        Image image = new Image("/test.jpg");
+//        ImageView iv1 = new ImageView();
+//        iv1.setImage(image);
+//        iv1.setFitWidth(375);
+//        iv1.setFitHeight(600);
         //iv1.setPreserveRatio(true);
         //iv1.setSmooth(true);
         
@@ -93,7 +93,7 @@ public class CreateGestureFX {
         root.setVgap(25);
         root.setPadding(new Insets(10, 10, 10, 10)); //top,right,bottom,left
         
-        root.add(iv1, 0, 0, 2, 5);
+//        root.add(iv1, 0, 0, 2, 5);
         root.add(btn2, 3, 1);
         root.add(btn1, 3, 2);
        

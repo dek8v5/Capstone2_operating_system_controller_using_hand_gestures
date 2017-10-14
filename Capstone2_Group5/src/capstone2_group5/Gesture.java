@@ -13,14 +13,6 @@ import com.leapmotion.leap.*;
  */
 public class Gesture extends DecisionTreeNode{
     public static Boolean debug = Capstone2_Group5.debug;
-    public static RadianRange allPositions;
-    static{
-        try{
-            allPositions = new RadianRange(new Float(0), new Float(180));
-        }catch(Exception e){
-            Debugger.print(e.getMessage());
-        }
-    }
     
     public String name;
     public Image rawImage;
@@ -32,9 +24,6 @@ public class Gesture extends DecisionTreeNode{
     public GestureFinger thumb;
     
     public GesturePalm palm;
-    
-    public RadianRange grabAngleAllowedPositions;
-    public DistanceRange pinchDistanceAllowedPositions;
     
     public Gesture(){
         index = new GestureFinger(Finger.Type.TYPE_INDEX);
@@ -125,14 +114,6 @@ public class Gesture extends DecisionTreeNode{
     
     public void setPalmRange(Float range) throws Exception{
         this.palm.allowedVector.setAllRanges(range);
-    }
-    
-    public void setGrabCenter(Float center) throws Exception{
-        this.grabAngleAllowedPositions.setCenter(center);
-    }
-    
-    public void setGrabRange(Float range) throws Exception{
-        this.grabAngleAllowedPositions.setRange(range);
     }
     
     private GestureFinger getGestureFinger(Finger.Type type) throws Exception{
@@ -334,8 +315,6 @@ public class Gesture extends DecisionTreeNode{
                "      intermediate: " + thumb.intermediate.allowedDirection + ",\n" +
                "      distal: " + thumb.distal.allowedDirection + "},\n" +
                "  },\n" +
-               "  Palm Normal: " + palm.allowedVector + ",\n" +
-               "  Grab Angle: " + this.grabAngleAllowedPositions + ",\n" +
-               "  Pinch Distance: " + this.pinchDistanceAllowedPositions;
+               "  Palm Normal: " + palm.allowedVector;
     }
 }

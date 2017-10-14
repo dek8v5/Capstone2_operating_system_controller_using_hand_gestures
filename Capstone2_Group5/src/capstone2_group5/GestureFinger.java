@@ -12,7 +12,7 @@ import com.leapmotion.leap.Finger;
  *
  * @author Cameron
  */
-public class GestureFinger {
+public class GestureFinger extends JSON{
     public static Boolean debug = Capstone2_Group5.debug;
     private Finger.Type type;
     public GestureBone metacarpal;

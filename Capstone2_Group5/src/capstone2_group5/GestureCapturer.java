@@ -31,8 +31,6 @@ public class GestureCapturer implements GestureRecognizer{
         Hand hand = capturedFrame.hands().frontmost();
         if(hand == null || !hand.isValid()){
             return null;
-//            LeapService.stop();
-//            throw new Exception("Invalid hand");
         }
 
         Finger index = hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0);
