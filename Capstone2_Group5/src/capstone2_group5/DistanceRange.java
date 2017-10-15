@@ -9,7 +9,7 @@ package capstone2_group5;
  *
  * @author Cameron
  */
-public class DistanceRange {
+public class DistanceRange extends JSON{
     private Float lowerBound;
     private Float upperBound;
     private Float center;
@@ -35,11 +35,11 @@ public class DistanceRange {
         }
     }
     
-    private void setCenter(Float newCenter) throws Exception{
+    public void setCenter(Float newCenter) throws Exception{
         setBounds(newCenter, range);
     }
     
-    private void setRange(Float newRange) throws Exception{
+    public void setRange(Float newRange) throws Exception{
         setBounds(center, newRange);
     }
     

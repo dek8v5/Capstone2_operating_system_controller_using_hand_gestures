@@ -65,16 +65,16 @@ public class GesturePageController implements Initializable {
                 newGesture = capturer.capture();
                 if(newGesture == null){
                     System.out.println("Invalid hand");
+                } else {
+                    TextInputDialog dialog = new TextInputDialog("Gesture Name");
+                    dialog.setTitle("Gesture Name");
+                    dialog.setHeaderText("Please, enter a name for the new gesture.");
+                    dialog.setContentText("Please enter gesture name:");
+
+                    Optional<String> result = dialog.showAndWait();
+
+                    result.ifPresent(name -> newGesture.name = name);
                 }
-                
-                TextInputDialog dialog = new TextInputDialog("Gesture Name");
-                dialog.setTitle("Gesture Name");
-                dialog.setHeaderText("Please, enter a name for the new gesture.");
-                dialog.setContentText("Please enter gesture name:");
-                
-                Optional<String> result = dialog.showAndWait();
-                
-                result.ifPresent(name -> newGesture.name = name);
 
             } catch (Exception ex) {
                 Alert alert = new Alert(AlertType.ERROR);

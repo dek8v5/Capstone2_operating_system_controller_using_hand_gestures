@@ -40,19 +40,24 @@ public class Capstone2_Group5FX extends Application{
         primaryStage.setScene(scene);
         primaryStage.show();
         
+//        Runtime.getRuntime().addShutdownHook(new Thread() {
+//            @Override
+//            public void run() {
+//                UserManager.store();
+//            }
+//        });
     }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args){
-        
         try {
-            UserManager.createProfile("Cameron");
+            UserManager.loadFromFile();
+//            UserManager.setCurrentUser("Cameron");
         } catch (Exception ex) {
             Logger.getLogger(Capstone2_Group5FX.class.getName()).log(Level.SEVERE, null, ex);
         }
-        UserManager.storeInFile();
         launch(args);
     }
 }  
