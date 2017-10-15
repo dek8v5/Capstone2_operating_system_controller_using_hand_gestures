@@ -141,7 +141,7 @@ public abstract class JSON extends JSONObject {
                     break;
                 case "HashMap":
                 case "java.util.HashMap":
-                    HashMap<Object, Object> map = new HashMap();
+                    HashMap<Object, Object> map = new HashMap<>();
                     JSONObject jsonMap = (JSONObject)value;
                     for(Object mapEntry : jsonMap.entrySet()){
                         Entry<Object, Object> entry = (Entry)mapEntry;

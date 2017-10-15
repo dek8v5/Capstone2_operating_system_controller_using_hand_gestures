@@ -16,7 +16,7 @@ public class BasicRecognizer implements GestureRecognizer{
     private Event thumbsUp = new Event(Event.TYPE.GESTURE_PERFORMED);
     private Event pointingWithIndex = new Event(Event.TYPE.GESTURE_PERFORMED);
     private BasicCommands command = new BasicCommands();
-    private ArrayList<Gesture> gestures = new ArrayList();
+    private ArrayList<Gesture> gestures = new ArrayList<>();
     
     private long lastCheck = 0;
 

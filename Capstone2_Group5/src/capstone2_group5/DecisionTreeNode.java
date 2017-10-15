@@ -95,23 +95,17 @@ public class DecisionTreeNode extends JSON {
 //                }
         }
         if(attributeValueToOutcome == null){
-            attributeValueToOutcome = new HashMap();
+            attributeValueToOutcome = new HashMap<>();
         }
         attributeValueToOutcome.put(value, node);
     }
     
     public void setUsedAttributes(ArrayList<DecisionTree.Attribute> attributes){
-        usedAttributes = new ArrayList();
-        attributes.forEach((att) -> {
-            usedAttributes.add(att);
-        });
+        usedAttributes = new ArrayList<>(attributes);
     }
     
     public ArrayList<DecisionTree.Attribute> getUsedAttributes(){
-        ArrayList<DecisionTree.Attribute> attributes = new ArrayList();
-        usedAttributes.forEach((att) -> {
-            attributes.add(att);
-        });
+        ArrayList<DecisionTree.Attribute> attributes = new ArrayList<>(usedAttributes);
         return attributes;
     }
     
@@ -179,7 +173,7 @@ public class DecisionTreeNode extends JSON {
                 if(!value.getClass().getName().equals(Vector.class.getName())){
                     throw new Exception("Attribute " + attribute + " must be given a Vector to be compared against");
                 }
-                ArrayList<DecisionTreeNode> possibleNodes = new ArrayList();
+                ArrayList<DecisionTreeNode> possibleNodes = new ArrayList<>();
                 attributeValueToOutcome.forEach((compare, node)-> {
                     VectorRange compareTo = (VectorRange)compare;
                     if(compareTo.contains((Vector)value)){

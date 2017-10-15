@@ -9,6 +9,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -23,11 +26,12 @@ import org.json.simple.parser.JSONParser;
 public class UserManager extends JSON {
     private static UserManager manager;
     private static final OSControl osControl = Capstone2_Group5.getOSController();
-    private static String baseFilepath = "." + File.separator + "src" + File.separator + "capstone2_group5" + File.separator + "Users" + File.separator;
+//    private static String baseFilepath = "." + File.separator + "src" + File.separator + "capstone2_group5" + File.separator + "Users" + File.separator;
+    private static String baseFilepath = "." + File.separator + "Users" + File.separator;
     private static String managerFilepath = baseFilepath + "Manager.bin";
     
-    private transient ArrayList<User> users = new ArrayList();
-    private HashMap<String, String> userFiles = new HashMap();
+    private transient ArrayList<User> users = new ArrayList<>();
+    private HashMap<String, String> userFiles = new HashMap<>();
     private transient User currentUser;
     private String currentUserName = "";
     private transient Event switchedUser;
@@ -79,7 +83,7 @@ public class UserManager extends JSON {
         }
         User profile = new User(name);
         users.add(profile);
-        System.out.println("user profile created");
+//        System.out.println("user profile created");
         UserManager.storeUser(profile);
         createdUser.addDetail("user", profile);
         createdUser.trigger();
@@ -93,7 +97,7 @@ public class UserManager extends JSON {
     }
     
     private ArrayList<User> _getAllUsers(){
-        return new ArrayList(users);
+        return new ArrayList<>(users);
     }
     
     public static void setCurrentUser(String name) throws Exception{
@@ -279,7 +283,7 @@ public class UserManager extends JSON {
             return;
         }
         if(users == null){
-            users = new ArrayList();
+            users = new ArrayList<>();
         }
         for(Entry<String, String>entry : userFiles.entrySet()){
             Object userObj = getObjectFromFile(entry.getValue());
@@ -303,7 +307,7 @@ public class UserManager extends JSON {
             fin.read(b);
             String fileContents = new String(b);
             JSONParser parser = new JSONParser();
-            System.out.println("read from " + filepath);
+//            System.out.println("read from " + filepath);
             return JSON.toJavaObject((JSONObject)parser.parse(fileContents));
         } catch(Exception e){
             java.util.logging.Logger.getLogger(UserManager.class.getName()).log(Level.SEVERE, null, e);
@@ -319,7 +323,7 @@ public class UserManager extends JSON {
         return null;
     }
     
-    public static void storeManagerAndUsers(){
+    public static void storeManagerAndUsers() throws Exception{
         store();
         storeUsers();
     }
@@ -329,27 +333,34 @@ public class UserManager extends JSON {
         write(managerFilepath, manager.toJsonObject().toString());
     }
     
-    public static void storeUsers(){
+    public static void storeUsers() throws Exception{
         for(User user : manager.users){
             storeUser(user);
         }
     }
     
-    private static void storeUser(User user){
-        String filepath = baseFilepath + user.getName();
+    private static void storeUser(User user) throws Exception{
+        createDirectory();
+        String filepath = baseFilepath + user.getName() + ".bin";
         String toWrite = user.toJsonObject().toString();
         write(filepath, toWrite);
         manager.userFiles.put(user.getName(), filepath);
     }
     
+    private static void createDirectory() throws Exception{
+        Path path = Paths.get(baseFilepath);
+        Files.createDirectories(path);
+    }
+    
     private static void write(String filepath, String toWrite){
         FileOutputStream fout = null;
         try{
+            createDirectory();
             File file = new File(filepath);
             file.createNewFile(); //only creates new file if it doesn't exist
             fout = new FileOutputStream(filepath);
             fout.write(toWrite.getBytes());
-            System.out.println("written to " + filepath);
+//            System.out.println("written to " + filepath);
         }catch(Exception e){
             java.util.logging.Logger.getLogger(UserManager.class.getName()).log(Level.SEVERE, null, e);
         } finally{

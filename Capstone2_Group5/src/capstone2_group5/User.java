@@ -13,9 +13,9 @@ import java.util.HashMap;
  * @author Cameron
  */
 public class User extends JSON {
-    private HashMap<Gesture, Command> gestureToCommand = new HashMap();
-    private HashMap<Command, Gesture> commandToGesture = new HashMap();
-    private ArrayList<Gesture> gestures = new ArrayList();
+    private HashMap<Gesture, Command> gestureToCommand = new HashMap<>();
+    private HashMap<Command, Gesture> commandToGesture = new HashMap<>();
+    private ArrayList<Gesture> gestures = new ArrayList<>();
     private final String name;
     private static Event userAddedGesture = new Event(Event.TYPE.USER_ADDED_GESTURE);
     private static Event userRemovedGesture = new Event(Event.TYPE.USER_REMOVED_GESTURE);
@@ -27,9 +27,9 @@ public class User extends JSON {
             commandToGesture.put(command, null);
         }
         this.name = "";
-        commandToGesture.forEach((command, gesture) -> {
-            System.out.println("Command in user " + name + "'s commandToGesture: " + command);
-        });
+//        commandToGesture.forEach((command, gesture) -> {
+//            System.out.println("Command in user " + name + "'s commandToGesture: " + command);
+//        });
     }
     
     public User(String name){

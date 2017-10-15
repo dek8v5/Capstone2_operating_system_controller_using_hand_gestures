@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class DecisionTree {
     private static DecisionTreeNode root;
-    private static ArrayList<Gesture> gestureList = new ArrayList();
+    private static ArrayList<Gesture> gestureList = new ArrayList<>();
     private static Event gesturesTooSimilar = new Event(Event.TYPE.GESTURES_TOO_SIMILAR);
     private static int tooSimilarListener;
     static{
@@ -81,7 +81,7 @@ public class DecisionTree {
     }
     
     private static DecisionTree.Attribute determineBestAttribute(ArrayList<Gesture> gestureList, ArrayList<DecisionTree.Attribute> usedAttributes) throws Exception{
-        HashMap<Attribute, Integer> distribution = new HashMap();
+        HashMap<Attribute, Integer> distribution = new HashMap<>();
         int gestureCount = gestureList.size();
         if(gestureCount == 0){
             throw new Exception("Cannot determine best attribute with a list of 0 gestures");
@@ -91,7 +91,7 @@ public class DecisionTree {
         Attribute bestAttribute = null;
         for(Attribute att : Attribute.values()){
             if(!usedAttributes.contains(att)){
-                HashMap<Object, Integer> numGesturesWithValues = new HashMap();
+                HashMap<Object, Integer> numGesturesWithValues = new HashMap<>();
                 //logic to determine best attribute
                 //get number of similar values for the attribute
                 for(Gesture gesture : gestureList){
@@ -136,7 +136,7 @@ public class DecisionTree {
         if(currentNode == null){
             root = new DecisionTreeNode();
             currentNode = root;
-            usedAttributes = new ArrayList();
+            usedAttributes = new ArrayList<>();
         } else {
             usedAttributes = currentNode.getUsedAttributes();
         }
@@ -184,11 +184,11 @@ public class DecisionTree {
     }
     
     private static HashMap<Object, ArrayList<Gesture>> getPossibleValuesAndMatchingGestures(ArrayList<Gesture> gestureList, DecisionTree.Attribute bestAttribute){
-        HashMap<Object, ArrayList<Gesture>> values = new HashMap();
+        HashMap<Object, ArrayList<Gesture>> values = new HashMap<>();
         gestureList.forEach((gesture) -> {
             Object value = gesture.getAttributeValue(bestAttribute);
             if (!values.containsKey(value)) {
-                ArrayList<Gesture> gestures = new ArrayList();
+                ArrayList<Gesture> gestures = new ArrayList<>();
                 gestures.add(gesture);
                 values.put(gesture.getAttributeValue(bestAttribute), gestures);
             } else {
@@ -214,7 +214,7 @@ public class DecisionTree {
     
     public static Gesture findGesture(Frame frame)throws Exception{
         DecisionTreeNode nextNode = null;
-        ArrayList<DecisionTreeNode> nodeList = new ArrayList();
+        ArrayList<DecisionTreeNode> nodeList = new ArrayList<>();
         nodeList.add(root);
 //        while(nextNode != null && nextNode.isGesture() == false){
         while(nodeListHasNodeThatIsNotGesture(nodeList)){
@@ -316,7 +316,7 @@ public class DecisionTree {
             nodeList.add(nextNode.getNextNodeByValue(value));
 //            nextNode = nextNode.getNextNodeByValue(value);
         }
-        ArrayList<Gesture> gesturesFound = new ArrayList();
+        ArrayList<Gesture> gesturesFound = new ArrayList<>();
         for(DecisionTreeNode node : nodeList){
             if(node != null && node.isGesture()){
                 gesturesFound.add((Gesture)node);
@@ -338,7 +338,7 @@ public class DecisionTree {
     }
     
     public static void view(){
-        ArrayList<String> tree = new ArrayList();
+        ArrayList<String> tree = new ArrayList<>();
         int i = 0;
 
     }
