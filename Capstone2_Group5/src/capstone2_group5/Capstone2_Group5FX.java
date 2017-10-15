@@ -43,7 +43,7 @@ public class Capstone2_Group5FX extends Application{
 //        Runtime.getRuntime().addShutdownHook(new Thread() {
 //            @Override
 //            public void run() {
-//                UserManager.store();
+//                LeapService.stop();
 //            }
 //        });
     }

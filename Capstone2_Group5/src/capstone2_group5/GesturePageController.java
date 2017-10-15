@@ -44,6 +44,7 @@ public class GesturePageController implements Initializable {
         if(event.getSource() == exitBtn){
             
             LeapService.stop();
+            UserManager.readyTree();
             
             Stage stage = (Stage) exitBtn.getScene().getWindow();
             Parent mainPage = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
@@ -60,7 +61,7 @@ public class GesturePageController implements Initializable {
     private void handleCaptureBtn(ActionEvent event) throws IOException, Exception{
         if(event.getSource() == captureBtn){
             
-            Gesture newGesture;
+            Gesture newGesture = null;
             try {
                 newGesture = capturer.capture();
                 if(newGesture == null){
@@ -72,11 +73,15 @@ public class GesturePageController implements Initializable {
                     dialog.setContentText("Please enter gesture name:");
 
                     Optional<String> result = dialog.showAndWait();
-
-                    result.ifPresent(name -> newGesture.name = name);
+                    if(result.isPresent()){
+                        newGesture.name = result.get();
+                    }
+//                    result.ifPresent(name -> newGesture.name = name);
+                    UserManager.addGestureToCurrentUser(newGesture);
                 }
 
             } catch (Exception ex) {
+                Logger.getLogger(GesturePageController.class.getName()).log(Level.SEVERE, null, ex);
                 Alert alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Error capturing gesture");
@@ -88,10 +93,9 @@ public class GesturePageController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) { 
-        
-            GestureRecognizer recognizer = new GestureCapturer();
-            capturer = (GestureCapturer)recognizer;
-            LeapService.start(recognizer);
+        GestureRecognizer recognizer = new GestureCapturer();
+        capturer = (GestureCapturer)recognizer;
+        LeapService.start(recognizer);
         
     }    
     

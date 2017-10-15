@@ -33,6 +33,7 @@ import javafx.stage.Stage;
  */
 public class MainPageController implements Initializable {
 
+    GestureRecognizer decisionTree = new AdvancedRecognizer();
     @FXML
     private Label label;
     
@@ -77,7 +78,7 @@ public class MainPageController implements Initializable {
     @FXML
     private void handleNewGesture(ActionEvent event) throws IOException, Exception{
         if(event.getSource() == btnNewGesture){
-            
+            LeapService.stop();
             Stage stage = (Stage) btnNewGesture.getScene().getWindow();
             
             Parent gesturePage = FXMLLoader.load(getClass().getResource("GesturePage.fxml"));
@@ -99,6 +100,11 @@ public class MainPageController implements Initializable {
             */
             
         }  
+    }
+    
+    @FXML
+    private void handleStart(ActionEvent event) {
+        LeapService.start(decisionTree);
     }
     
     @FXML
@@ -130,7 +136,12 @@ public class MainPageController implements Initializable {
                 }
                 else{
                     newName = profileName.getText();
-                    UserManager.createProfile(newName);
+                    try{
+                        UserManager.createProfile(newName);
+                        testLabel.setText("New profile " + profileName.getText() + " is created");
+                    }catch(Exception e){
+                        testLabel.setText(e.getMessage());
+                    }
                 
                     System.out.println("----------------");
                     ArrayList<User> users;
@@ -139,7 +150,6 @@ public class MainPageController implements Initializable {
                         System.out.println(user.getName());
                     }
                 //System.out.println(newName.toString());
-                testLabel.setText("New profile " + profileName.getText() + " is created");
             
                 //stage=(Stage) profileCancel.getScene().getWindow();
                 //root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));

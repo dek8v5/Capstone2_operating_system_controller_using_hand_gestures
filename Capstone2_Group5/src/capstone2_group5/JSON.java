@@ -357,6 +357,8 @@ public abstract class JSON extends JSONObject {
                 toReturn = temp;
             } else if(fieldType.isArray()){
                 System.out.println("found array" + value);
+            } else if(fieldType.isEnum()){
+                toReturn = value.toString();
             } else {
                 toReturn = value;
             }

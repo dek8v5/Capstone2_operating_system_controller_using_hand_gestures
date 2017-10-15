@@ -23,16 +23,12 @@ public class GestureFinger extends JSON{
     public Boolean isExtended;
     public VectorRange allowedDirection;
     
-    private GestureFinger(){
-        //prevent calling constructor with no type
-    }
-    
     public GestureFinger(Finger.Type type){
-        this.type = type;
         metacarpal = new GestureBone(Bone.Type.TYPE_METACARPAL);
         proximal = new GestureBone(Bone.Type.TYPE_PROXIMAL);
         intermediate = new GestureBone(Bone.Type.TYPE_INTERMEDIATE);
         distal = new GestureBone(Bone.Type.TYPE_DISTAL);
+        this.type = type;
     }
     
     public Finger.Type getType(){
@@ -41,7 +37,7 @@ public class GestureFinger extends JSON{
     
     public Boolean performedBy(Finger finger){
             Boolean fingerDirectionCorrect, metacarpalCorrect, proximalCorrect, intermediateCorrect, distalCorrect, extendedCorrect;
-            Debugger.print(type + " Correctness:");
+//            Debugger.print(type + " Correctness:");
             fingerDirectionCorrect = allowedDirection.contains(finger.direction());
             Debugger.print("  finger direction: " + fingerDirectionCorrect);
             if(type == Finger.Type.TYPE_THUMB){

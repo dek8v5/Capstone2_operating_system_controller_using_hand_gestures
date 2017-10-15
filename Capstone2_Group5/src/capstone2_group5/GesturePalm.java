@@ -11,4 +11,8 @@ package capstone2_group5;
  */
 public class GesturePalm extends JSON{
     public VectorRange allowedVector;
+    
+    public GesturePalm(){
+        allowedVector = new VectorRange();
+    }
 }

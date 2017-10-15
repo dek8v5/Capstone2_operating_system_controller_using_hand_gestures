@@ -16,7 +16,7 @@ public class GestureBone extends JSON{
     private Bone.Type type;
     public VectorRange allowedDirection;
     
-    private GestureBone(){
+    public GestureBone(){
         //prevent calling constructor with no type
     }
             

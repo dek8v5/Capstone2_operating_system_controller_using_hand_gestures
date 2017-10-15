@@ -15,7 +15,7 @@ public class Gesture extends DecisionTreeNode{
     public static Boolean debug = Capstone2_Group5.debug;
     
     public String name;
-    public Image rawImage;
+//    public Image rawImage;
     
     public GestureFinger index;
     public GestureFinger middle;
@@ -33,8 +33,6 @@ public class Gesture extends DecisionTreeNode{
         thumb = new GestureFinger(Finger.Type.TYPE_THUMB);
         palm = new GesturePalm();
     }
-    
-
     
     public Boolean performedIn(Frame frame){
         Debugger.print("Checking if " + name + " is in frame " + frame);

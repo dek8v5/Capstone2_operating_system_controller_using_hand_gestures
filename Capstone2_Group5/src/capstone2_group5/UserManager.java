@@ -38,12 +38,18 @@ public class UserManager extends JSON {
     private transient Event createdUser;
     private transient Event deletedUser;
     private transient Event userListChanged;
+    private transient int gesturePerformedListenerId;
     
     private UserManager(){
         switchedUser = new Event(Event.TYPE.USER_SWITCHED);
         createdUser = new Event(Event.TYPE.USER_CREATED);
         deletedUser = new Event(Event.TYPE.USER_DELETED);
         userListChanged = new Event(Event.TYPE.USER_LIST_CHANGED);
+        gesturePerformedListenerId = Event.registerHandler(Event.TYPE.GESTURE_PERFORMED, (Event event) -> {
+            Gesture gesture = (Gesture)event.get("gesture");
+            System.out.println("Gesture performed: " + gesture.name);
+            UserManager.handleGesturePerformed(gesture);
+        });
         manager = this;
     }
     

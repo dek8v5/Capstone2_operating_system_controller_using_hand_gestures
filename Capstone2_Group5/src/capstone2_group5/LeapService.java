@@ -16,6 +16,7 @@ public class LeapService implements Runnable{
 
     
     public static void start(GestureRecognizer recognizer){
+        stop();
         listener = new LeapServiceListener(recognizer);
         controller.addListener(listener);
         running = true;

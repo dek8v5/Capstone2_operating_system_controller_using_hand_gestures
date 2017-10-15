@@ -16,24 +16,16 @@ public class User extends JSON {
     private HashMap<Gesture, Command> gestureToCommand = new HashMap<>();
     private HashMap<Command, Gesture> commandToGesture = new HashMap<>();
     private ArrayList<Gesture> gestures = new ArrayList<>();
-    private final String name;
+    private String name;
     private static Event userAddedGesture = new Event(Event.TYPE.USER_ADDED_GESTURE);
     private static Event userRemovedGesture = new Event(Event.TYPE.USER_REMOVED_GESTURE);
     private static Event userMappedGestureToCommand = new Event(Event.TYPE.USER_MAPPED_GESTURE_TO_COMMAND);
     private static Event userRemovedGestureFromCommand = new Event(Event.TYPE.USER_REMOVED_GESTURE_FROM_COMMAND);
     
-    private User(){
+    public User(String name){
         for(Command command : Command.values()){
             commandToGesture.put(command, null);
         }
-        this.name = "";
-//        commandToGesture.forEach((command, gesture) -> {
-//            System.out.println("Command in user " + name + "'s commandToGesture: " + command);
-//        });
-    }
-    
-    public User(String name){
-        super();
         this.name = name;
     }
     

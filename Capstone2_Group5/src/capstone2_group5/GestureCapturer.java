@@ -39,10 +39,10 @@ public class GestureCapturer implements GestureRecognizer{
         Finger pinky = hand.fingers().fingerType(Finger.Type.TYPE_PINKY).get(0);
         Finger thumb = hand.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0);
         
-        Image frameImage = capturedFrame.images().get(0);
+//        Image frameImage = capturedFrame.images().get(0);
         
         Gesture captured = new Gesture();
-        captured.rawImage = frameImage;
+//        captured.rawImage = frameImage;
         setFingerProperties(index, captured.index);
         setFingerProperties(middle, captured.middle);
         setFingerProperties(ring, captured.ring);
@@ -65,7 +65,7 @@ public class GestureCapturer implements GestureRecognizer{
     private void setFingerProperties(Finger finger, GestureFinger gestureFinger) throws Exception{
         gestureFinger.isExtended = finger.isExtended();
         gestureFinger.allowedDirection = getVectorRange(finger.direction(), defaultAllowedFingerRadianRange);
-        if(finger.type() != Finger.Type.TYPE_THUMB){
+        if(!finger.type().equals(Finger.Type.TYPE_THUMB)){
             gestureFinger.metacarpal.allowedDirection = getVectorRange(finger.bone(Bone.Type.TYPE_METACARPAL).direction(), defaultAllowedBoneRadianRange);
         }
         gestureFinger.intermediate.allowedDirection = getVectorRange(finger.bone(Bone.Type.TYPE_INTERMEDIATE).direction(), defaultAllowedBoneRadianRange);

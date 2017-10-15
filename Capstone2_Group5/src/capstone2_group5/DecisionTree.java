@@ -313,8 +313,8 @@ public class DecisionTree {
                     value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0).bone(Bone.Type.TYPE_DISTAL).direction();
                     break;
             }
-            nodeList.add(nextNode.getNextNodeByValue(value));
-//            nextNode = nextNode.getNextNodeByValue(value);
+            nodeList.addAll(nextNode.getNextNodesByValue(value));
+//            nextNode = nextNode.getNextNodesByValue(value);
         }
         ArrayList<Gesture> gesturesFound = new ArrayList<>();
         for(DecisionTreeNode node : nodeList){
@@ -324,11 +324,11 @@ public class DecisionTree {
         }
         if(gesturesFound.size() == 1){
             return gesturesFound.get(0);
-        } else {
+        } else if (gesturesFound.size() > 1){
             gesturesTooSimilar.addDetail("gestures", gesturesFound);
             gesturesTooSimilar.trigger();
-            return null;
         }
+        return null;
 //        if(nextNode != null && nextNode.isGesture()){
 //            return (Gesture)nextNode;
 //        } else {

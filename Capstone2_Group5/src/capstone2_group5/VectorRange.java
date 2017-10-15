@@ -12,9 +12,13 @@ import com.leapmotion.leap.Vector;
  * @author Cameron
  */
 public class VectorRange extends JSON{
-    private final RadianRange xRange;
-    private final RadianRange yRange;
-    private final RadianRange zRange;
+    private RadianRange xRange;
+    private RadianRange yRange;
+    private RadianRange zRange;
+    
+    public VectorRange(){
+        
+    }
     
     public VectorRange(Float xCenter, Float xRange, Float yCenter, Float yRange, Float zCenter, Float zRange) throws Exception{
         this.xRange = new RadianRange(xCenter, xRange);
