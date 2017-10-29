@@ -25,7 +25,7 @@
                   <Insets left="20.0" />
                </HBox.margin>
             </ImageView>
-            <ComboBox fx:id="comboName" prefWidth="150.0" promptText="Select Profile">
+            <ComboBox fx:id="comboName" onAction="#handleComboProfile" prefWidth="150.0" promptText="Select Profile">
                <HBox.margin>
                   <Insets left="213.0" right="213.0" />
                </HBox.margin>
@@ -37,10 +37,10 @@
             </Button>
          </children>
       </HBox>
-      <TableView layoutX="32.0" layoutY="152.0" prefHeight="379.0" prefWidth="368.0">
+      <TableView fx:id="gestureMappingTable" layoutX="32.0" layoutY="152.0" prefHeight="379.0" prefWidth="388.0">
          <columns>
-            <TableColumn prefWidth="184.0" text="Gesture" />
-            <TableColumn prefWidth="183.0" text="Action" />
+            <TableColumn fx:id="columnGesture" onEditStart="#populateGestureColumn" prefWidth="170.0" text="Gesture" />
+            <TableColumn fx:id="columnCommand" onEditStart="#populateCommandColumn" prefWidth="217.0" text="Command" />
          </columns>
       </TableView>
       <Label layoutX="37.0" layoutY="121.0" prefHeight="19.0" prefWidth="134.0" text="Gesture Mapping" textOverrun="WORD_ELLIPSIS">

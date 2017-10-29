@@ -13,16 +13,16 @@ import java.util.Map.Entry;
  *
  * @author Cameron
  */
-public class User extends JSON {
+public class User extends JSON { 
     private HashMap<Gesture, Command> gestureToCommand;
-    private ArrayList<Gesture> gestures;
+    private ArrayList<Gesture> gestures;     
     private final String name;
     private Boolean modifiedSinceLoad = false;
     private static Event userAddedGesture = new Event(Event.TYPE.USER_ADDED_GESTURE);
     private static Event userRemovedGesture = new Event(Event.TYPE.USER_REMOVED_GESTURE);
     private static Event userMappedGestureToCommand = new Event(Event.TYPE.USER_MAPPED_GESTURE_TO_COMMAND);
     private static Event userRemovedGestureFromCommand = new Event(Event.TYPE.USER_REMOVED_GESTURE_FROM_COMMAND);
-    
+ 
     private User(){
         gestureToCommand = new HashMap();
         this.name = null;

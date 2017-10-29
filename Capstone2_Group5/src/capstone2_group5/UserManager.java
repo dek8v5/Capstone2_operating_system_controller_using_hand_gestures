@@ -6,7 +6,10 @@
 package capstone2_group5;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
+import javafx.beans.value.ObservableValue;
 
 /**
  *
@@ -24,6 +27,9 @@ public class UserManager implements java.io.Serializable {
     private transient Event createdUser;
     private transient Event deletedUser;
     private transient Event userListChanged;
+    
+    private static ArrayList<String> gestureTest = new ArrayList(Arrays.asList("Gesture1", "Gesture2", "Gesture3", "Gesture4", "Gesture5", "Gesture6"));
+    
     
     private UserManager() throws Exception{
         if(numManagers == 0){
@@ -219,4 +225,23 @@ public class UserManager implements java.io.Serializable {
 //            }
 //        }
     }
+    
+    public List<Command> getCommandList(){
+        //System.out.println(java.util.Arrays.asList(Command.values()));
+        return java.util.Arrays.asList(Command.values());
+    }
+    
+    public static List<Command> getCommandList2(){
+        //System.out.println(java.util.Arrays.asList(Command.values()));
+        return java.util.Arrays.asList(Command.values());
+    }
+    
+    public ArrayList<String> getGesture(){
+        return gestureTest;
+    }
+    
+   
+    
+    
+    
 }
