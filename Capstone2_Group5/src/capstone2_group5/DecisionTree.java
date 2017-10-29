@@ -18,22 +18,19 @@ public class DecisionTree {
     private static DecisionTreeNode root;
     private static ArrayList<Gesture> gestureList = new ArrayList<>();
     private static DecisionTreeNode nextNode;
-    private static Object value;
+    private static Object valueToCheck;
     private static Hand hand;
     private static ArrayList<DecisionTreeNode> nodeList = new ArrayList<>();
     private static ArrayList<Gesture> gesturesFound = new ArrayList<>();
     private static Event gesturesTooSimilar = new Event(Event.TYPE.GESTURES_TOO_SIMILAR);
     private static int tooSimilarListener;
     static{
-        tooSimilarListener = Event.registerHandler(Event.TYPE.GESTURES_TOO_SIMILAR, new EventHandler() {
-            @Override
-            public void handle(Event event){
-                System.out.print("Gestures are too similar: ");
-                ArrayList<Gesture> gestures = (ArrayList<Gesture>)event.get("gestures");
-                if(gestures != null){
-                    for(Gesture gesture : (ArrayList<Gesture>)event.get("gestures")){
-                        System.out.print(gesture.name + " - ");
-                    }
+        tooSimilarListener = Event.registerHandler(Event.TYPE.GESTURES_TOO_SIMILAR, (Event event) -> {
+            System.out.print("Gestures are too similar: ");
+            ArrayList<Gesture> gestures = (ArrayList<Gesture>)event.get("gestures");
+            if(gestures != null){
+                for(Gesture gesture : (ArrayList<Gesture>)event.get("gestures")){
+                    System.out.print(gesture.name + " - ");
                 }
             }
         });
@@ -136,7 +133,7 @@ public class DecisionTree {
     private static void build(DecisionTreeNode currentNode, ArrayList<Gesture> gestureList) throws Exception{
         System.out.println("Start of build() - Current node:" + currentNode);
         if(gestureList.isEmpty()){
-            return; //node will have no children.  a node with no children will return null when attempting to get its children by a value
+            return; //node will have no children.  a node with no children will return null when attempting to get its children by a valueToCheck
         }
         ArrayList<DecisionTree.Attribute> usedAttributes;
         if(currentNode == null){
@@ -174,14 +171,14 @@ public class DecisionTree {
                 Object value = entry.getKey();
                 ArrayList<Gesture> gestures = entry.getValue();
                 if(gestures.size() > 0){
-                    //if there are gestures associated with this value
+                    //if there are gestures associated with this valueToCheck
                     DecisionTreeNode child = new DecisionTreeNode();
                     child.setUsedAttributes(usedAttributes);
                     currentNode.setConditionalNode(value, child);
                     System.out.println("   Node is a branch node with children - " + currentNode);
                     build(child, gestures);
                 } else {
-                    //if no gestures are associated with this value
+                    //if no gestures are associated with this valueToCheck
                     currentNode.setConditionalNode(value, null);
                     System.out.println("   Node has no children");
                 }
@@ -218,109 +215,112 @@ public class DecisionTree {
         return hasNonGestureNode;
     }
     
+    public static ArrayList<DecisionTreeNode> getSearchedNodes(){
+        return new ArrayList<>(nodeList);
+    }
+    
     public static Gesture findGesture(Frame frame)throws Exception{
-        System.out.println("Looking for gesture in frame " + frame);
+       // System.out.println("Looking for gesture in frame " + frame);
         nodeList.clear();
         nodeList.add(root);
 //        while(nextNode != null && nextNode.isGesture() == false){
         while(nodeListHasNodeThatIsNotGesture(nodeList)){
             nextNode = nodeList.remove(0);
             hand = frame.hands().frontmost();
-            value = null;
+            valueToCheck = null;
             switch(nextNode.getAttribute()){
                 case INDEX_EXTENDED:
-                    value = (Boolean)hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0).isExtended();
+                    valueToCheck = (Boolean)hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0).isExtended();
                     break;
                 case MIDDLE_EXTENDED:
-                    value = (Boolean)hand.fingers().fingerType(Finger.Type.TYPE_MIDDLE).get(0).isExtended();
+                    valueToCheck = (Boolean)hand.fingers().fingerType(Finger.Type.TYPE_MIDDLE).get(0).isExtended();
                     break;
                 case RING_EXTENDED:
-                    value = (Boolean)hand.fingers().fingerType(Finger.Type.TYPE_RING).get(0).isExtended();
+                    valueToCheck = (Boolean)hand.fingers().fingerType(Finger.Type.TYPE_RING).get(0).isExtended();
                     break;
                 case PINKY_EXTENDED:
-                    value = (Boolean)hand.fingers().fingerType(Finger.Type.TYPE_PINKY).get(0).isExtended();
+                    valueToCheck = (Boolean)hand.fingers().fingerType(Finger.Type.TYPE_PINKY).get(0).isExtended();
                     break;
                 case THUMB_EXTENDED:
-                    value = (Boolean)hand.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0).isExtended();
+                    valueToCheck = (Boolean)hand.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0).isExtended();
                     break;
                 case PALM_NORMAL:
-                    value = (Vector)hand.palmNormal();
+                    valueToCheck = (Vector)hand.palmNormal();
                     break;
                 case INDEX_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0).direction();
                     break;
                 case MIDDLE_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_MIDDLE).get(0).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_MIDDLE).get(0).direction();
                     break;
                 case RING_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_RING).get(0).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_RING).get(0).direction();
                     break;
                 case PINKY_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_PINKY).get(0).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_PINKY).get(0).direction();
                     break;
                 case THUMB_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0).direction();
                     break;
                 case INDEX_METACARPAL_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0).bone(Bone.Type.TYPE_METACARPAL).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0).bone(Bone.Type.TYPE_METACARPAL).direction();
                     break;
                 case INDEX_INTERMEDIATE_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0).bone(Bone.Type.TYPE_INTERMEDIATE).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0).bone(Bone.Type.TYPE_INTERMEDIATE).direction();
                     break;
                 case INDEX_PROXIMAL_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0).bone(Bone.Type.TYPE_PROXIMAL).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0).bone(Bone.Type.TYPE_PROXIMAL).direction();
                     break;
                 case INDEX_DISTAL_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0).bone(Bone.Type.TYPE_DISTAL).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0).bone(Bone.Type.TYPE_DISTAL).direction();
                     break;
                 case MIDDLE_METACARPAL_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_MIDDLE).get(0).bone(Bone.Type.TYPE_METACARPAL).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_MIDDLE).get(0).bone(Bone.Type.TYPE_METACARPAL).direction();
                     break;
                 case MIDDLE_INTERMEDIATE_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_MIDDLE).get(0).bone(Bone.Type.TYPE_INTERMEDIATE).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_MIDDLE).get(0).bone(Bone.Type.TYPE_INTERMEDIATE).direction();
                     break;
                 case MIDDLE_PROXIMAL_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_MIDDLE).get(0).bone(Bone.Type.TYPE_PROXIMAL).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_MIDDLE).get(0).bone(Bone.Type.TYPE_PROXIMAL).direction();
                     break;
                 case MIDDLE_DISTAL_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_MIDDLE).get(0).bone(Bone.Type.TYPE_DISTAL).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_MIDDLE).get(0).bone(Bone.Type.TYPE_DISTAL).direction();
                     break;
                 case RING_METACARPAL_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_RING).get(0).bone(Bone.Type.TYPE_METACARPAL).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_RING).get(0).bone(Bone.Type.TYPE_METACARPAL).direction();
                     break;
                 case RING_INTERMEDIATE_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_RING).get(0).bone(Bone.Type.TYPE_INTERMEDIATE).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_RING).get(0).bone(Bone.Type.TYPE_INTERMEDIATE).direction();
                     break;
                 case RING_PROXIMAL_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_RING).get(0).bone(Bone.Type.TYPE_PROXIMAL).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_RING).get(0).bone(Bone.Type.TYPE_PROXIMAL).direction();
                     break;
                 case RING_DISTAL_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_RING).get(0).bone(Bone.Type.TYPE_DISTAL).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_RING).get(0).bone(Bone.Type.TYPE_DISTAL).direction();
                     break;
                 case PINKY_METACARPAL_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_PINKY).get(0).bone(Bone.Type.TYPE_METACARPAL).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_PINKY).get(0).bone(Bone.Type.TYPE_METACARPAL).direction();
                     break;
                 case PINKY_INTERMEDIATE_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_PINKY).get(0).bone(Bone.Type.TYPE_INTERMEDIATE).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_PINKY).get(0).bone(Bone.Type.TYPE_INTERMEDIATE).direction();
                     break;
                 case PINKY_PROXIMAL_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_PINKY).get(0).bone(Bone.Type.TYPE_PROXIMAL).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_PINKY).get(0).bone(Bone.Type.TYPE_PROXIMAL).direction();
                     break;
                 case PINKY_DISTAL_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_PINKY).get(0).bone(Bone.Type.TYPE_DISTAL).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_PINKY).get(0).bone(Bone.Type.TYPE_DISTAL).direction();
                     break;
                 case THUMB_INTERMEDIATE_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0).bone(Bone.Type.TYPE_INTERMEDIATE).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0).bone(Bone.Type.TYPE_INTERMEDIATE).direction();
                     break;
                 case THUMB_PROXIMAL_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0).bone(Bone.Type.TYPE_PROXIMAL).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0).bone(Bone.Type.TYPE_PROXIMAL).direction();
                     break;
                 case THUMB_DISTAL_DIRECTION:
-                    value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0).bone(Bone.Type.TYPE_DISTAL).direction();
+                    valueToCheck = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0).bone(Bone.Type.TYPE_DISTAL).direction();
                     break;
             }
-            nodeList.addAll(nextNode.getNextNodesByValue(value));
-//            nextNode = nextNode.getNextNodesByValue(value);
+            nodeList.addAll(nextNode.getNextNodesByValue(valueToCheck));
         }
         gesturesFound.clear();
         for(DecisionTreeNode node : nodeList){
@@ -331,7 +331,7 @@ public class DecisionTree {
         if(gesturesFound.size() == 1){
             return gesturesFound.get(0);
         } else if (gesturesFound.size() > 1){
-            gesturesTooSimilar.addDetail("gestures", new ArrayList<Gesture>(gesturesFound));
+            gesturesTooSimilar.addDetail("gestures", new ArrayList<>(gesturesFound));
             gesturesTooSimilar.trigger();
         }
         return null;
@@ -344,8 +344,6 @@ public class DecisionTree {
     }
     
     public static void view(){
-        ArrayList<String> tree = new ArrayList<>();
-        int i = 0;
 
     }
 

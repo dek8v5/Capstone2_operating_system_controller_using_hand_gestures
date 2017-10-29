@@ -110,6 +110,7 @@ public class MainPageController implements Initializable {
     @FXML
     private void handleStart(ActionEvent event) {
         LeapService.start(decisionTree);
+        DecisionTreeViewer.start();
     }
     
     @FXML
