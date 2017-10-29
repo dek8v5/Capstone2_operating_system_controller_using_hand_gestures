@@ -9,8 +9,6 @@ import com.leapmotion.leap.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -18,25 +16,30 @@ import java.util.logging.Logger;
  */
 public class DecisionTree {
     private static DecisionTreeNode root;
-    private static ArrayList<Gesture> gestureList = new ArrayList();
-    
-    private DecisionTree(){
+    private static ArrayList<Gesture> gestureList = new ArrayList<>();
+    private static DecisionTreeNode nextNode;
+    private static Object value;
+    private static Hand hand;
+    private static ArrayList<DecisionTreeNode> nodeList = new ArrayList<>();
+    private static ArrayList<Gesture> gesturesFound = new ArrayList<>();
+    private static Event gesturesTooSimilar = new Event(Event.TYPE.GESTURES_TOO_SIMILAR);
+    private static int tooSimilarListener;
+    static{
+        tooSimilarListener = Event.registerHandler(Event.TYPE.GESTURES_TOO_SIMILAR, new EventHandler() {
+            @Override
+            public void handle(Event event){
+                System.out.print("Gestures are too similar: ");
+                ArrayList<Gesture> gestures = (ArrayList<Gesture>)event.get("gestures");
+                if(gestures != null){
+                    for(Gesture gesture : (ArrayList<Gesture>)event.get("gestures")){
+                        System.out.print(gesture.name + " - ");
+                    }
+                }
+            }
+        });
     }
     
-    public static void init(){
-//        int gestureTrackerListener = Event.registerHandler(Event.TYPE.GESTURE_CAPTURED, new EventHandler() {
-//            @Override
-//            public void handle(Event event) {
-//                Gesture gesture = (Gesture)event.get("gesture");
-//                gestureList.add(gesture);
-//                try {
-//                    DecisionTree.create(gestureList);
-//                    System.out.println("Gesture captured and added to decision tree");
-//                } catch (Exception ex) {
-//                    Logger.getLogger(DecisionTree.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//        });
+    private DecisionTree(){
     }
     
     public enum Attribute{
@@ -76,12 +79,15 @@ public class DecisionTree {
     
     public static void create(ArrayList<Gesture> gestureList) throws Exception{
         root = null;
-        System.out.println("creating decision tree");
+        System.out.println("creating decision tree with gestures");
+        gestureList.forEach((gesture) -> {
+            System.out.println(gesture.name);
+        });
         build(root, gestureList);
     }
     
     private static DecisionTree.Attribute determineBestAttribute(ArrayList<Gesture> gestureList, ArrayList<DecisionTree.Attribute> usedAttributes) throws Exception{
-        HashMap<Attribute, Integer> distribution = new HashMap();
+        HashMap<Attribute, Integer> distribution = new HashMap<>();
         int gestureCount = gestureList.size();
         if(gestureCount == 0){
             throw new Exception("Cannot determine best attribute with a list of 0 gestures");
@@ -91,7 +97,7 @@ public class DecisionTree {
         Attribute bestAttribute = null;
         for(Attribute att : Attribute.values()){
             if(!usedAttributes.contains(att)){
-                HashMap<Object, Integer> numGesturesWithValues = new HashMap();
+                HashMap<Object, Integer> numGesturesWithValues = new HashMap<>();
                 //logic to determine best attribute
                 //get number of similar values for the attribute
                 for(Gesture gesture : gestureList){
@@ -136,7 +142,7 @@ public class DecisionTree {
         if(currentNode == null){
             root = new DecisionTreeNode();
             currentNode = root;
-            usedAttributes = new ArrayList();
+            usedAttributes = new ArrayList<>();
         } else {
             usedAttributes = currentNode.getUsedAttributes();
         }
@@ -184,11 +190,11 @@ public class DecisionTree {
     }
     
     private static HashMap<Object, ArrayList<Gesture>> getPossibleValuesAndMatchingGestures(ArrayList<Gesture> gestureList, DecisionTree.Attribute bestAttribute){
-        HashMap<Object, ArrayList<Gesture>> values = new HashMap();
+        HashMap<Object, ArrayList<Gesture>> values = new HashMap<>();
         gestureList.forEach((gesture) -> {
             Object value = gesture.getAttributeValue(bestAttribute);
             if (!values.containsKey(value)) {
-                ArrayList<Gesture> gestures = new ArrayList();
+                ArrayList<Gesture> gestures = new ArrayList<>();
                 gestures.add(gesture);
                 values.put(gesture.getAttributeValue(bestAttribute), gestures);
             } else {
@@ -198,11 +204,29 @@ public class DecisionTree {
         return values;
     }
     
+    public static Boolean nodeListHasNodeThatIsNotGesture(ArrayList<DecisionTreeNode> list){
+        if(list == null || list.isEmpty()){
+            return false;
+        }
+        Boolean hasNonGestureNode = false;
+        for(DecisionTreeNode node : list){
+            if(node != null && node.isGesture() == false){
+                hasNonGestureNode = true;
+                break;
+            }
+        }
+        return hasNonGestureNode;
+    }
+    
     public static Gesture findGesture(Frame frame)throws Exception{
-        DecisionTreeNode nextNode = root;
-        while(nextNode != null && nextNode.isGesture() == false){
-            Hand hand = frame.hands().frontmost();
-            Object value = null;
+        System.out.println("Looking for gesture in frame " + frame);
+        nodeList.clear();
+        nodeList.add(root);
+//        while(nextNode != null && nextNode.isGesture() == false){
+        while(nodeListHasNodeThatIsNotGesture(nodeList)){
+            nextNode = nodeList.remove(0);
+            hand = frame.hands().frontmost();
+            value = null;
             switch(nextNode.getAttribute()){
                 case INDEX_EXTENDED:
                     value = (Boolean)hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0).isExtended();
@@ -295,18 +319,32 @@ public class DecisionTree {
                     value = (Vector)hand.fingers().fingerType(Finger.Type.TYPE_THUMB).get(0).bone(Bone.Type.TYPE_DISTAL).direction();
                     break;
             }
-            nextNode = nextNode.getNextNodeByValue(value);
+            nodeList.addAll(nextNode.getNextNodesByValue(value));
+//            nextNode = nextNode.getNextNodesByValue(value);
         }
-        if(nextNode != null && nextNode.isGesture()){
-            return (Gesture)nextNode;
-        } else {
-            return null;
+        gesturesFound.clear();
+        for(DecisionTreeNode node : nodeList){
+            if(node != null && node.isGesture()){
+                gesturesFound.add((Gesture)node);
+            }
         }
+        if(gesturesFound.size() == 1){
+            return gesturesFound.get(0);
+        } else if (gesturesFound.size() > 1){
+            gesturesTooSimilar.addDetail("gestures", new ArrayList<Gesture>(gesturesFound));
+            gesturesTooSimilar.trigger();
+        }
+        return null;
+//        if(nextNode != null && nextNode.isGesture()){
+//            return (Gesture)nextNode;
+//        } else {
+//            return null;
+//        }
 
     }
     
     public static void view(){
-        ArrayList<String> tree = new ArrayList();
+        ArrayList<String> tree = new ArrayList<>();
         int i = 0;
 
     }

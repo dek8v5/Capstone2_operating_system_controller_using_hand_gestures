@@ -6,84 +6,131 @@
 package capstone2_group5;
 
 import com.leapmotion.leap.Vector;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 /**
  *
  * @author Cameron
  */
-public class VectorRange extends JSON{
-    private final RadianRange xRange;
-    private final RadianRange yRange;
-    private final RadianRange zRange;
+public class VectorRange implements JSONWritableReadable{
+    private RadianRange xRange;
+    private RadianRange yRange;
+    private RadianRange zRange;
     
-    public VectorRange(Float xCenter, Float xRange, Float yCenter, Float yRange, Float zCenter, Float zRange) throws Exception{
+    public VectorRange(){
+        this.xRange = new RadianRange();
+        this.yRange = new RadianRange();
+        this.zRange = new RadianRange();
+    }
+    
+    public VectorRange(Double xCenter, Double xRange, Double yCenter, Double yRange, Double zCenter, Double zRange) throws Exception{
         this.xRange = new RadianRange(xCenter, xRange);
         this.yRange = new RadianRange(yCenter, yRange);
         this.zRange = new RadianRange(zCenter, zRange);
     }
     
-    public VectorRange(Vector vector, Float range) throws Exception{
-        this.xRange = new RadianRange(vector.getX(), range);
-        this.yRange = new RadianRange(vector.getY(), range);
-        this.zRange = new RadianRange(vector.getZ(), range);
+    public VectorRange(Vector vector, Double range) throws Exception{
+        this.xRange = new RadianRange(toDouble(vector.getX()), range);
+        this.yRange = new RadianRange(toDouble(vector.getY()), range);
+        this.zRange = new RadianRange(toDouble(vector.getZ()), range);
     }
     
-    private Boolean contains(Float x, Float y, Float z){
+    private Double toDouble(float value){
+        return Double.parseDouble(Float.toString(value));
+    }
+    
+    private Boolean contains(Double x, Double y, Double z){
         return xRange.contains(x) && yRange.contains(y) && zRange.contains(z);
     }
     
     public Boolean contains(Vector vector){
-        return this.contains(vector.getX(), vector.getY(), vector.getZ());
+        return this.contains(toDouble(vector.getX()), toDouble(vector.getY()), toDouble(vector.getZ()));
     }
     
-    private void setAllCenters(Float x, Float y, Float z) throws Exception{
+    private void setAllCenters(Double x, Double y, Double z) throws Exception{
         setXCenter(x);
         setYCenter(y);
         setZCenter(z);
     }
 
     public void setCenter(Vector vector) throws Exception{
-        setAllCenters(vector.getX(), vector.getY(), vector.getZ());
+        setAllCenters(toDouble(vector.getX()), toDouble(vector.getY()), toDouble(vector.getZ()));
     }
     
-    public void setAllRanges(Float range) throws Exception{
+    public void setAllRanges(Double range) throws Exception{
         setXRange(range);
         setYRange(range);
         setZRange(range);
     }
     
-    public void setAllRanges(Float x, Float y, Float z) throws Exception{
+    public void setAllRanges(float range) throws Exception{
+        setAllRanges(toDouble(range));
+    }
+    
+    public void setAllRanges(Double x, Double y, Double z) throws Exception{
         setXRange(x);
         setYRange(y);
         setZRange(z);
     }
     
-    private void setXCenter(Float x) throws Exception{
+    private void setXCenter(Double x) throws Exception{
         xRange.setCenter(x);
     }
     
-    public void setXRange(Float x) throws Exception{
+    public void setXRange(Double x) throws Exception{
         xRange.setRange(x);
     }
     
-    private void setYCenter(Float y) throws Exception{
+    private void setYCenter(Double y) throws Exception{
         yRange.setCenter(y);
     }
     
-    public void setYRange(Float y) throws Exception{
+    public void setYRange(Double y) throws Exception{
         yRange.setRange(y);
     }
     
-    private void setZCenter(Float z) throws Exception{
+    private void setZCenter(Double z) throws Exception{
         zRange.setCenter(z);
     }
     
-    public void setZRange(Float z) throws Exception{
+    public void setZRange(Double z) throws Exception{
         zRange.setRange(z);
     }
     
     @Override
     public String toString(){
         return "{x: " + xRange + ", y: " + yRange + ", z: " + zRange + "}";
+    }
+
+    @Override
+    public String makeJSONString() {
+        return toJSONObject().toJSONString();
+    }
+
+    @Override
+    public void makeSelfFromJSON(String json) {
+        Object obj = JSONValue.parse(json);
+        if(obj != null){
+            JSONObject jsonObj = (JSONObject)obj;
+            makeSelfFromJSONObject(jsonObj);
+        }
+    }
+
+    @Override
+    public JSONObject toJSONObject() {
+        JSONObject obj = new JSONObject();
+        obj.put("xRange", xRange.toJSONObject());
+        obj.put("yRange", xRange.toJSONObject());
+        obj.put("zRange", zRange.toJSONObject());
+        return obj;
+    }
+
+    @Override
+    public void makeSelfFromJSONObject(JSONObject jsonObject) {
+        xRange.makeSelfFromJSONObject((JSONObject)jsonObject.get("xRange"));
+        yRange.makeSelfFromJSONObject((JSONObject)jsonObject.get("yRange"));
+        zRange.makeSelfFromJSONObject((JSONObject)jsonObject.get("zRange"));
+        
     }
 }

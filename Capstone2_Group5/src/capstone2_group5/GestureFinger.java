@@ -7,32 +7,35 @@ package capstone2_group5;
 
 import com.leapmotion.leap.Bone;
 import com.leapmotion.leap.Finger;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 /**
  *
  * @author Cameron
  */
-public class GestureFinger extends JSON{
+public class GestureFinger implements JSONWritableReadable{
     public static Boolean debug = Capstone2_Group5.debug;
     private Finger.Type type;
-    public GestureBone metacarpal;
-    public GestureBone proximal;
-    public GestureBone intermediate;
-    public GestureBone distal;
+    public GestureBone metacarpal= new GestureBone(Bone.Type.TYPE_METACARPAL);
+    public GestureBone proximal = new GestureBone(Bone.Type.TYPE_PROXIMAL);
+    public GestureBone intermediate = new GestureBone(Bone.Type.TYPE_INTERMEDIATE);
+    public GestureBone distal = new GestureBone(Bone.Type.TYPE_DISTAL);
     
     public Boolean isExtended;
-    public VectorRange allowedDirection;
+    public VectorRange allowedDirection = new VectorRange();
     
-    private GestureFinger(){
-        //prevent calling constructor with no type
+    public GestureFinger(){
+        
     }
     
     public GestureFinger(Finger.Type type){
+//        metacarpal = new GestureBone(Bone.Type.TYPE_METACARPAL);
+//        proximal = new GestureBone(Bone.Type.TYPE_PROXIMAL);
+//        intermediate = new GestureBone(Bone.Type.TYPE_INTERMEDIATE);
+//        distal = new GestureBone(Bone.Type.TYPE_DISTAL);
+//        allowedDirection = new VectorRange();
         this.type = type;
-        metacarpal = new GestureBone(Bone.Type.TYPE_METACARPAL);
-        proximal = new GestureBone(Bone.Type.TYPE_PROXIMAL);
-        intermediate = new GestureBone(Bone.Type.TYPE_INTERMEDIATE);
-        distal = new GestureBone(Bone.Type.TYPE_DISTAL);
     }
     
     public Finger.Type getType(){
@@ -41,7 +44,7 @@ public class GestureFinger extends JSON{
     
     public Boolean performedBy(Finger finger){
             Boolean fingerDirectionCorrect, metacarpalCorrect, proximalCorrect, intermediateCorrect, distalCorrect, extendedCorrect;
-            Debugger.print(type + " Correctness:");
+//            Debugger.print(type + " Correctness:");
             fingerDirectionCorrect = allowedDirection.contains(finger.direction());
             Debugger.print("  finger direction: " + fingerDirectionCorrect);
             if(type == Finger.Type.TYPE_THUMB){
@@ -65,4 +68,43 @@ public class GestureFinger extends JSON{
                     distalCorrect &&
                     extendedCorrect;
     }
+    
+    @Override
+    public String makeJSONString(){
+        return toJSONObject().toJSONString();
+    }
+
+    @Override
+    public void makeSelfFromJSON(String json) {
+        Object obj = JSONValue.parse(json);
+        if(obj != null){
+            JSONObject jsonObj = (JSONObject)obj;
+            makeSelfFromJSONObject(jsonObj);
+        }
+    }
+
+    @Override
+    public JSONObject toJSONObject() {
+        JSONObject obj = new JSONObject();
+        obj.put("type", type.toString());
+        obj.put("metacarpal", metacarpal.toJSONObject());
+        obj.put("proximal", proximal.toJSONObject());
+        obj.put("intermediate", intermediate.toJSONObject());
+        obj.put("distal", distal.toJSONObject());
+        obj.put("isExtended", isExtended);
+        obj.put("allowedDirection", allowedDirection.toJSONObject());
+        return obj;
+    }
+
+    @Override
+    public void makeSelfFromJSONObject(JSONObject jsonObject) {
+        type = Finger.Type.valueOf(jsonObject.get("type").toString());
+        metacarpal.makeSelfFromJSONObject((JSONObject)jsonObject.get("metacarpal"));
+        proximal.makeSelfFromJSONObject((JSONObject)jsonObject.get("proximal"));
+        intermediate.makeSelfFromJSONObject((JSONObject)jsonObject.get("intermediate"));
+        distal.makeSelfFromJSONObject((JSONObject)jsonObject.get("distal"));
+        isExtended = Boolean.valueOf(jsonObject.get("isExtended").toString());
+        allowedDirection.makeSelfFromJSONObject((JSONObject)jsonObject.get("allowedDirection"));
+    }
+
 }
