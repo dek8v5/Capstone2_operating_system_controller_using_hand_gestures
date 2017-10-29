@@ -9,8 +9,6 @@ import com.leapmotion.leap.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -19,6 +17,11 @@ import java.util.logging.Logger;
 public class DecisionTree {
     private static DecisionTreeNode root;
     private static ArrayList<Gesture> gestureList = new ArrayList<>();
+    private static DecisionTreeNode nextNode;
+    private static Object value;
+    private static Hand hand;
+    private static ArrayList<DecisionTreeNode> nodeList = new ArrayList<>();
+    private static ArrayList<Gesture> gesturesFound = new ArrayList<>();
     private static Event gesturesTooSimilar = new Event(Event.TYPE.GESTURES_TOO_SIMILAR);
     private static int tooSimilarListener;
     static{
@@ -76,7 +79,10 @@ public class DecisionTree {
     
     public static void create(ArrayList<Gesture> gestureList) throws Exception{
         root = null;
-        System.out.println("creating decision tree");
+        System.out.println("creating decision tree with gestures");
+        gestureList.forEach((gesture) -> {
+            System.out.println(gesture.name);
+        });
         build(root, gestureList);
     }
     
@@ -213,14 +219,14 @@ public class DecisionTree {
     }
     
     public static Gesture findGesture(Frame frame)throws Exception{
-        DecisionTreeNode nextNode = null;
-        ArrayList<DecisionTreeNode> nodeList = new ArrayList<>();
+        System.out.println("Looking for gesture in frame " + frame);
+        nodeList.clear();
         nodeList.add(root);
 //        while(nextNode != null && nextNode.isGesture() == false){
         while(nodeListHasNodeThatIsNotGesture(nodeList)){
             nextNode = nodeList.remove(0);
-            Hand hand = frame.hands().frontmost();
-            Object value = null;
+            hand = frame.hands().frontmost();
+            value = null;
             switch(nextNode.getAttribute()){
                 case INDEX_EXTENDED:
                     value = (Boolean)hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0).isExtended();
@@ -316,7 +322,7 @@ public class DecisionTree {
             nodeList.addAll(nextNode.getNextNodesByValue(value));
 //            nextNode = nextNode.getNextNodesByValue(value);
         }
-        ArrayList<Gesture> gesturesFound = new ArrayList<>();
+        gesturesFound.clear();
         for(DecisionTreeNode node : nodeList){
             if(node != null && node.isGesture()){
                 gesturesFound.add((Gesture)node);
@@ -325,7 +331,7 @@ public class DecisionTree {
         if(gesturesFound.size() == 1){
             return gesturesFound.get(0);
         } else if (gesturesFound.size() > 1){
-            gesturesTooSimilar.addDetail("gestures", gesturesFound);
+            gesturesTooSimilar.addDetail("gestures", new ArrayList<Gesture>(gesturesFound));
             gesturesTooSimilar.trigger();
         }
         return null;

@@ -44,7 +44,11 @@ public class GesturePageController implements Initializable {
         if(event.getSource() == exitBtn){
             
             LeapService.stop();
-            UserManager.readyTree();
+            try{
+                UserManager.readyTree();
+            }catch (Exception e){
+                System.out.println("Cannot get decision tree ready: " + e.getMessage());
+            }
             
             Stage stage = (Stage) exitBtn.getScene().getWindow();
             Parent mainPage = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
@@ -61,7 +65,7 @@ public class GesturePageController implements Initializable {
     private void handleCaptureBtn(ActionEvent event) throws IOException, Exception{
         if(event.getSource() == captureBtn){
             
-            Gesture newGesture = null;
+            Gesture newGesture = new Gesture();
             try {
                 newGesture = capturer.capture();
                 if(newGesture == null){
@@ -85,7 +89,7 @@ public class GesturePageController implements Initializable {
                 Alert alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Error capturing gesture");
-                alert.setContentText("Error. Invalid hand.");
+                alert.setContentText(ex.getMessage());
                 alert.showAndWait();
             }    
         }  

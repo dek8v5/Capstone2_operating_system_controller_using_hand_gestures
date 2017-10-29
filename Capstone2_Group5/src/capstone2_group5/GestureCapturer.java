@@ -19,7 +19,7 @@ public class GestureCapturer implements GestureRecognizer{
     public static Float defaultAllowedBoneRadianRange = new Float(0.7); // about 45 degrees
     public static Float defaultAllowedPalmRadianRange = new Float(0.35); // about 20 degrees
     public static Float defaultAllowedGrabAngleRadianRange = new Float(0.35); // about 20 degrees
-    private float defaultAllowedDistance = 20; // in mm
+    private double defaultAllowedDistance = 20; // in mm
     
     public GestureCapturer(){
     }
@@ -27,7 +27,9 @@ public class GestureCapturer implements GestureRecognizer{
     public Gesture capture()throws Exception{
         
         capturedFrame = lastFrame;
-
+        if(capturedFrame == null){
+            throw new Exception("No frame found.  Is the leap motion controller connected?");
+        }
         Hand hand = capturedFrame.hands().frontmost();
         if(hand == null || !hand.isValid()){
             return null;
@@ -59,6 +61,10 @@ public class GestureCapturer implements GestureRecognizer{
     }
     
     private VectorRange getVectorRange(Vector vector, float range) throws Exception{
+        return getVectorRange(vector, Double.parseDouble(Float.toString(range)));
+    }
+    
+    private VectorRange getVectorRange(Vector vector, Double range) throws Exception{
         return new VectorRange(vector, range);
     }
     

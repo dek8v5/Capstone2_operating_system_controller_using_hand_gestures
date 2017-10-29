@@ -14,17 +14,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.json.simple.JSONValue;
 
 /**
  *
  * @author Cameron
  */
-public class UserManager extends JSON {
-    private static UserManager manager;
+public class UserManager implements JSONWritableReadable {
+    public static UserManager manager;
     private static final OSControl osControl = Capstone2_Group5.getOSController();
 //    private static String baseFilepath = "." + File.separator + "src" + File.separator + "capstone2_group5" + File.separator + "Users" + File.separator;
     private static String baseFilepath = "." + File.separator + "Users" + File.separator;
@@ -35,9 +36,9 @@ public class UserManager extends JSON {
     private transient User currentUser;
     private String currentUserName = "";
     private transient Event switchedUser;
-    private transient Event createdUser;
-    private transient Event deletedUser;
-    private transient Event userListChanged;
+    private static transient Event createdUser;
+    private static transient Event deletedUser;
+    private static transient Event userListChanged;
     private transient int gesturePerformedListenerId;
     
     private UserManager(){
@@ -89,7 +90,7 @@ public class UserManager extends JSON {
         }
         User profile = new User(name);
         users.add(profile);
-//        System.out.println("user profile created");
+        System.out.println("user profile created");
         UserManager.storeUser(profile);
         createdUser.addDetail("user", profile);
         createdUser.trigger();
@@ -267,11 +268,13 @@ public class UserManager extends JSON {
         DecisionTree.create(currentUser.getGestures());
     }
     
-    public static void loadFromFile(){
-        Object loadedObj = getObjectFromFile(managerFilepath);
-        manager = (UserManager)loadedObj;
+    public static void loadFromFile() throws Exception{
+        System.out.println("Loading manager from file");
+        manager = new UserManager();
+        setObjectFromFile(manager, managerFilepath);
+//        manager = (UserManager)loadedObj;
         if(manager == null){
-            return;
+            throw new Exception("Manager is null? This shouldn't happen");
         }
         manager.loadUsers();
         if(manager.currentUserName == null || manager.currentUserName.equals("")){
@@ -292,29 +295,32 @@ public class UserManager extends JSON {
             users = new ArrayList<>();
         }
         for(Entry<String, String>entry : userFiles.entrySet()){
-            Object userObj = getObjectFromFile(entry.getValue());
-            User user = (User)userObj;
-            if(user == null){
+            User user = new User();
+            setObjectFromFile(user, entry.getValue());
+            if(user.getName() == null){
                 continue;
             }
             users.add((User)user);
         }
     }
     
-    private static Object getObjectFromFile(String filepath){
+    private static void setObjectFromFile(JSONWritableReadable blankObject, String filepath){
+        System.out.println("setting obj from file: " + blankObject);
         FileInputStream fin = null;
         try{
             File file = new File(filepath);
             if(!file.exists() || file.length() <= 0){
-                return null;
+                throw new Exception("File does not exist");
             }
             fin = new FileInputStream(filepath);
             byte[] b = new byte[(int)file.length()];
             fin.read(b);
             String fileContents = new String(b);
-            JSONParser parser = new JSONParser();
+            System.out.println("filecontents: " + fileContents);
 //            System.out.println("read from " + filepath);
-            return JSON.toJavaObject((JSONObject)parser.parse(fileContents));
+            blankObject.makeSelfFromJSON(fileContents);
+//            return blankObject;
+//            return JSONOld.makeJavaObject(fileContents);
         } catch(Exception e){
             java.util.logging.Logger.getLogger(UserManager.class.getName()).log(Level.SEVERE, null, e);
         } finally{
@@ -326,7 +332,7 @@ public class UserManager extends JSON {
                 }
             }
         }
-        return null;
+//        return null;
     }
     
     public static void storeManagerAndUsers() throws Exception{
@@ -336,7 +342,7 @@ public class UserManager extends JSON {
     
     public static void store(){
         initializeManager();
-        write(managerFilepath, manager.toJsonObject().toString());
+        write(managerFilepath, manager.makeJSONString());
     }
     
     public static void storeUsers() throws Exception{
@@ -348,7 +354,8 @@ public class UserManager extends JSON {
     private static void storeUser(User user) throws Exception{
         createDirectory();
         String filepath = baseFilepath + user.getName() + ".bin";
-        String toWrite = user.toJsonObject().toString();
+        String toWrite = user.makeJSONString();
+        System.out.println("writing " + toWrite + " to file: " + filepath);
         write(filepath, toWrite);
         manager.userFiles.put(user.getName(), filepath);
     }
@@ -378,5 +385,39 @@ public class UserManager extends JSON {
                 }
             }
         }
+    }
+
+    @Override
+    public String makeJSONString() {
+        return toJSONObject().toJSONString();
+    }
+
+    @Override
+    public void makeSelfFromJSON(String json) {
+        Object obj = JSONValue.parse(json);
+        if(obj != null){
+            JSONObject jsonObj = (JSONObject)obj;
+            makeSelfFromJSONObject(jsonObj);
+        }
+    }
+
+    @Override
+    public JSONObject toJSONObject() {
+        JSONObject obj = new JSONObject();
+        JSONObject files = new JSONObject();
+        userFiles.forEach(files::put);
+        obj.put("currentUserName", this.currentUserName);
+        obj.put("userFiles", files);
+        return obj;
+    }
+
+    @Override
+    public void makeSelfFromJSONObject(JSONObject jsonObject) {
+        JSONObject files;
+        currentUserName = jsonObject.get("currentUserName").toString();
+        files = (JSONObject)jsonObject.get("userFiles");
+        files.forEach((key, value) -> {
+            userFiles.put(key.toString(), value.toString());
+        });
     }
 }

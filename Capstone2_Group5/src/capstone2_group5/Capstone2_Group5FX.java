@@ -6,6 +6,9 @@
 
 package capstone2_group5;
 
+import com.leapmotion.leap.Bone;
+import com.leapmotion.leap.Finger;
+import com.leapmotion.leap.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -21,6 +24,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 /**
  *
@@ -44,8 +49,15 @@ public class Capstone2_Group5FX extends Application{
 //            @Override
 //            public void run() {
 //                LeapService.stop();
+//                System.out.println("shutdown hook executed");
 //            }
 //        });
+    }
+    
+    @Override
+    public void stop() throws Exception{
+        LeapService.stop();
+        super.stop();
     }
 
     /**
@@ -53,8 +65,27 @@ public class Capstone2_Group5FX extends Application{
      */
     public static void main(String[] args){
         try {
+//            GestureBone vRange = new GestureBone();
+//            vRange.type = Bone.Type.TYPE_DISTAL;
+//            vRange.allowedDirection.setCenter(new Vector());
+//            vRange.allowedDirection.setAllRanges(2.2);
+//            System.out.println("first vRange: " + vRange.toPrettyString());
+//            String vRangeString = vRange.makeJSONString();
+//            System.out.println("first vRange as json string: " + vRangeString);
+//            GestureBone secondRange = new GestureBone();
+//            secondRange.makeSelfFromJSON(vRangeString);
+//            System.out.println("second vRange from json string: " + secondRange.toPrettyString());
             UserManager.loadFromFile();
-//            UserManager.setCurrentUser("Cameron");
+            System.out.println(UserManager.manager.makeJSONString());
+//            GestureFinger finger = new GestureFinger(Finger.Type.TYPE_INDEX);
+//            finger.allowedDirection.setCenter(new Vector(3, 4, 5));
+//            finger.allowedDirection.setAllRanges(2.3);
+//            System.out.println("First finger: " + finger.toPrettyString());
+//            String fingerString = finger.makeJSONString();
+//            GestureFinger secondFinger = new GestureFinger();
+//            secondFinger.makeSelfFromJSON(fingerString);
+////            GestureFinger secondFinger = (GestureFinger)JSONOld.makeJavaObject(fingerString);
+//            System.out.println("Second finger: " + secondFinger.toPrettyString());
         } catch (Exception ex) {
             Logger.getLogger(Capstone2_Group5FX.class.getName()).log(Level.SEVERE, null, ex);
         }

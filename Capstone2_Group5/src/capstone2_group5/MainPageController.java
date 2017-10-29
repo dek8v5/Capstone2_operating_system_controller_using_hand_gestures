@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -78,6 +80,9 @@ public class MainPageController implements Initializable {
     @FXML
     private void handleNewGesture(ActionEvent event) throws IOException, Exception{
         if(event.getSource() == btnNewGesture){
+            if(UserManager.getCurrentUser() == null){
+                throw new Exception("A user profile must be selected before creating a new gesture.");
+            }
             LeapService.stop();
             Stage stage = (Stage) btnNewGesture.getScene().getWindow();
             
@@ -140,6 +145,7 @@ public class MainPageController implements Initializable {
                         UserManager.createProfile(newName);
                         testLabel.setText("New profile " + profileName.getText() + " is created");
                     }catch(Exception e){
+                        Logger.getLogger(MainPageController.class.getName()).log(Level.SEVERE, null, e);
                         testLabel.setText(e.getMessage());
                     }
                 

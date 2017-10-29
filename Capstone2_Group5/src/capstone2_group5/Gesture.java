@@ -6,12 +6,14 @@
 package capstone2_group5;
 
 import com.leapmotion.leap.*;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 /**
  *
  * @author Cameron
  */
-public class Gesture extends DecisionTreeNode{
+public class Gesture extends DecisionTreeNode implements JSONWritableReadable{
     public static Boolean debug = Capstone2_Group5.debug;
     
     public String name;
@@ -314,5 +316,44 @@ public class Gesture extends DecisionTreeNode{
                "      distal: " + thumb.distal.allowedDirection + "},\n" +
                "  },\n" +
                "  Palm Normal: " + palm.allowedVector;
+    }
+    
+    @Override
+    public String makeJSONString(){
+        return toJSONObject().toJSONString();
+    }
+
+    @Override
+    public void makeSelfFromJSON(String json) {
+        Object obj = JSONValue.parse(json);
+        if(obj != null){
+            JSONObject jsonObj = (JSONObject)obj;
+            makeSelfFromJSONObject(jsonObj);
+        }
+    }
+
+    @Override
+    public JSONObject toJSONObject() {
+        //name, fingers, palm
+        JSONObject obj = new JSONObject();
+        obj.put("name", name);
+        obj.put("thumb", thumb.toJSONObject());
+        obj.put("index", index.toJSONObject());
+        obj.put("middle", middle.toJSONObject());
+        obj.put("ring", ring.toJSONObject());
+        obj.put("pinky", pinky.toJSONObject());
+        obj.put("palm", palm.toJSONObject());
+        return obj;
+    }
+
+    @Override
+    public void makeSelfFromJSONObject(JSONObject jsonObject) {
+        name = jsonObject.get("name").toString();
+        thumb.makeSelfFromJSONObject((JSONObject)jsonObject.get("thumb"));
+        index.makeSelfFromJSONObject((JSONObject)jsonObject.get("index"));
+        middle.makeSelfFromJSONObject((JSONObject)jsonObject.get("middle"));
+        ring.makeSelfFromJSONObject((JSONObject)jsonObject.get("ring"));
+        pinky.makeSelfFromJSONObject((JSONObject)jsonObject.get("pinky"));
+        palm.makeSelfFromJSONObject((JSONObject)jsonObject.get("palm"));
     }
 }

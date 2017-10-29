@@ -12,7 +12,7 @@ import java.util.HashMap;
  *
  * @author Cameron
  */
-public class DecisionTreeNode extends JSON {
+public class DecisionTreeNode {
     private HashMap<Object, DecisionTreeNode> attributeValueToOutcome;
     private DecisionTree.Attribute attribute;
     private ArrayList<DecisionTree.Attribute> usedAttributes;
@@ -164,6 +164,6 @@ public class DecisionTreeNode extends JSON {
     }
     
     public String toString(){
-        return this.attribute + ": " + this.attributeValueToOutcome;
+        return "Decision tree node with attribute " + this.attribute + " and value " + this.attributeValueToOutcome;
     }
 }
