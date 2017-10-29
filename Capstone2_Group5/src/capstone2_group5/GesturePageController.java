@@ -17,10 +17,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 /**
@@ -31,6 +33,9 @@ import javafx.stage.Stage;
 public class GesturePageController implements Initializable {
     
     private GestureCapturer capturer;
+    
+    @FXML
+    private SubScene visualizerScene;
     
     @FXML
     private Button captureBtn;
@@ -83,6 +88,17 @@ public class GesturePageController implements Initializable {
 //                    result.ifPresent(name -> newGesture.name = name);
                     UserManager.addGestureToCurrentUser(newGesture);
                 }
+                
+                TextInputDialog dialog = new TextInputDialog("Gesture Name");
+                dialog.setTitle("Gesture Name");
+                dialog.setHeaderText("Please, enter a name for the new gesture.");
+                dialog.setContentText("Please enter gesture name:");
+                
+                Optional<String> result = dialog.showAndWait();
+                
+                result.ifPresent(name -> newGesture.name = name);
+                
+                UserManager.addGestureToCurrentUser(newGesture);
 
             } catch (Exception ex) {
                 Logger.getLogger(GesturePageController.class.getName()).log(Level.SEVERE, null, ex);
@@ -97,9 +113,19 @@ public class GesturePageController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) { 
-        GestureRecognizer recognizer = new GestureCapturer();
-        capturer = (GestureCapturer)recognizer;
-        LeapService.start(recognizer);
+        
+            WebView browser = new WebView();
+            URL vurl = getClass().getResource("Visualizer.html");
+            System.out.println("URL: " + vurl);
+            browser.getEngine().load(vurl.toExternalForm());
+            
+            visualizerScene.setHeight(510);
+            visualizerScene.setWidth(800);
+            visualizerScene.setRoot(browser);
+            
+            GestureRecognizer recognizer = new GestureCapturer();
+            capturer = (GestureCapturer)recognizer;
+            LeapService.start(recognizer);
         
     }    
     
