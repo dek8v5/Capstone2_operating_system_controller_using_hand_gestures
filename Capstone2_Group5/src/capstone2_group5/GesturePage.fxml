@@ -14,7 +14,7 @@
     </stylesheets>
    <children>
       <HBox prefHeight="75.0" prefWidth="820.0" style="-fx-background-color: #336699;" />
-      <HBox alignment="CENTER_RIGHT" layoutY="604.0" prefHeight="46.0" prefWidth="820.0" style="-fx-background-color: #336699;">
+      <HBox alignment="CENTER_RIGHT" layoutY="605.0" prefHeight="45.0" prefWidth="820.0" style="-fx-background-color: #336699;">
          <children>
             <Button fx:id="captureBtn" mnemonicParsing="false" onAction="#handleCaptureBtn" text="Capture">
                <HBox.margin>
@@ -28,5 +28,10 @@
             </Button>
          </children>
       </HBox>
+      <SubScene fx:id="visualizerScene" height="510.0" layoutX="10.0" layoutY="85.0" width="800.0">
+        <root>
+          <Region />
+        </root>
+      </SubScene>
    </children>
 </AnchorPane>
