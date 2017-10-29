@@ -49,7 +49,11 @@ public class GesturePageController implements Initializable {
         if(event.getSource() == exitBtn){
             
             LeapService.stop();
-//            UserManager.readyTree();
+            try{
+                UserManager.readyTree();
+            }catch (Exception e){
+                System.out.println("Cannot get decision tree ready: " + e.getMessage());
+            }
             
             Stage stage = (Stage) exitBtn.getScene().getWindow();
             Parent mainPage = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
@@ -66,11 +70,23 @@ public class GesturePageController implements Initializable {
     private void handleCaptureBtn(ActionEvent event) throws IOException, Exception{
         if(event.getSource() == captureBtn){
             
-            Gesture newGesture;
+            Gesture newGesture = new Gesture();
             try {
                 newGesture = capturer.capture();
                 if(newGesture == null){
                     System.out.println("Invalid hand");
+                } else {
+                    TextInputDialog dialog = new TextInputDialog("Gesture Name");
+                    dialog.setTitle("Gesture Name");
+                    dialog.setHeaderText("Please, enter a name for the new gesture.");
+                    dialog.setContentText("Please enter gesture name:");
+
+                    Optional<String> result = dialog.showAndWait();
+                    if(result.isPresent()){
+                        newGesture.name = result.get();
+                    }
+//                    result.ifPresent(name -> newGesture.name = name);
+                    UserManager.addGestureToCurrentUser(newGesture);
                 }
                 
                 TextInputDialog dialog = new TextInputDialog("Gesture Name");
@@ -82,13 +98,14 @@ public class GesturePageController implements Initializable {
                 
                 result.ifPresent(name -> newGesture.name = name);
                 
-//                UserManager.addGestureToCurrentUser(newGesture);
+                UserManager.addGestureToCurrentUser(newGesture);
 
             } catch (Exception ex) {
+                Logger.getLogger(GesturePageController.class.getName()).log(Level.SEVERE, null, ex);
                 Alert alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Error capturing gesture");
-                alert.setContentText("Error. Invalid hand.");
+                alert.setContentText(ex.getMessage());
                 alert.showAndWait();
             }    
         }  

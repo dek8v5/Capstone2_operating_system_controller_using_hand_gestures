@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,6 +35,7 @@ import javafx.stage.Stage;
  */
 public class MainPageController implements Initializable {
 
+    GestureRecognizer decisionTree = new AdvancedRecognizer();
     @FXML
     private Label label;
     
@@ -77,7 +80,10 @@ public class MainPageController implements Initializable {
     @FXML
     private void handleNewGesture(ActionEvent event) throws IOException, Exception{
         if(event.getSource() == btnNewGesture){
-            
+            if(UserManager.getCurrentUser() == null){
+                throw new Exception("A user profile must be selected before creating a new gesture.");
+            }
+            LeapService.stop();
             Stage stage = (Stage) btnNewGesture.getScene().getWindow();
             
             Parent gesturePage = FXMLLoader.load(getClass().getResource("GesturePage.fxml"));
@@ -86,6 +92,11 @@ public class MainPageController implements Initializable {
             stage.setScene(scene);
             stage.show();
         }  
+    }
+    
+    @FXML
+    private void handleStart(ActionEvent event) {
+        LeapService.start(decisionTree);
     }
     
     @FXML
@@ -117,7 +128,13 @@ public class MainPageController implements Initializable {
                 }
                 else{
                     newName = profileName.getText();
-                    UserManager.createProfile(newName);
+                    try{
+                        UserManager.createProfile(newName);
+                        testLabel.setText("New profile " + profileName.getText() + " is created");
+                    }catch(Exception e){
+                        Logger.getLogger(MainPageController.class.getName()).log(Level.SEVERE, null, e);
+                        testLabel.setText(e.getMessage());
+                    }
                 
                     System.out.println("----------------");
                     ArrayList<User> users;
@@ -126,7 +143,6 @@ public class MainPageController implements Initializable {
                         System.out.println(user.getName());
                     }
                 //System.out.println(newName.toString());
-                testLabel.setText("New profile " + profileName.getText() + " is created");
             
                 //stage=(Stage) profileCancel.getScene().getWindow();
                 //root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));

@@ -12,12 +12,13 @@ import com.leapmotion.leap.Frame;
  * @author Cameron
  */
 public class AdvancedRecognizer implements GestureRecognizer{
+    Event gestureFound = new Event(Event.TYPE.GESTURE_PERFORMED);
+    
     @Override
     public void scan(Frame frame){
         try{
             Gesture gesture = DecisionTree.findGesture(frame);
             if(gesture != null){
-                Event gestureFound = new Event(Event.TYPE.GESTURE_PERFORMED);
                 gestureFound.addDetail("gesture", gesture);
                 gestureFound.trigger();
             }
