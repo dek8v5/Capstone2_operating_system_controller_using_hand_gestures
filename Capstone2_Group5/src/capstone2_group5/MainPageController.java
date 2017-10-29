@@ -171,7 +171,7 @@ public class MainPageController implements Initializable {
     
    
     public void populateCommandColumn(){
- 
+        
         /*      
         System.out.println("test");
         columnCommand.setCellValueFactory((CellDataFeatures<UserManager, Command> param) -> {
