@@ -13,20 +13,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 
 /**
  * FXML Controller class
@@ -62,10 +59,11 @@ public class MainPageController implements Initializable {
     
     @FXML
     private ComboBox<String> comboName;
-    
+
     @FXML
     private TableView gestureMappingTable;
     
+
     @FXML
     private TableColumn<Gesture, String> gestureName;
     
@@ -153,8 +151,31 @@ public class MainPageController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        hideNewProfile();
+        populateProfileList();  
+    }
+    
+    
+    public void populateProfileList(){
        
-    }    
+        comboName.getItems().removeAll(comboName.getItems());
+        users = UserManager.getAllUsers();
+        for(User user : users){               
+            comboName.getItems().add(user.getName()); 
+        }
+    }
+    
+    public void hideNewProfile(){
+        profileName.setVisible(false);
+        btnProfileCancel.setVisible(false);
+        btnProfileSave.setVisible(false);
+    }
+    
+    public void showNewProfile(){
+        profileName.setVisible(true);
+        btnProfileCancel.setVisible(true);
+        btnProfileSave.setVisible(true); 
+    }
 }
 
  

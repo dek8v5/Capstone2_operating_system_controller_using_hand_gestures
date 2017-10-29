@@ -21,6 +21,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -37,6 +38,7 @@ public class Capstone2_Group5FX extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
         
         Parent mainPage = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
         
@@ -45,13 +47,6 @@ public class Capstone2_Group5FX extends Application{
         primaryStage.setScene(scene);
         primaryStage.show();
         
-//        Runtime.getRuntime().addShutdownHook(new Thread() {
-//            @Override
-//            public void run() {
-//                LeapService.stop();
-//                System.out.println("shutdown hook executed");
-//            }
-//        });
     }
     
     @Override
@@ -65,6 +60,7 @@ public class Capstone2_Group5FX extends Application{
      */
     public static void main(String[] args){
         try {
+
 //            GestureBone vRange = new GestureBone();
 //            vRange.type = Bone.Type.TYPE_DISTAL;
 //            vRange.allowedDirection.setCenter(new Vector());
@@ -86,9 +82,11 @@ public class Capstone2_Group5FX extends Application{
 //            secondFinger.makeSelfFromJSON(fingerString);
 ////            GestureFinger secondFinger = (GestureFinger)JSONOld.makeJavaObject(fingerString);
 //            System.out.println("Second finger: " + secondFinger.toPrettyString());
+
         } catch (Exception ex) {
             Logger.getLogger(Capstone2_Group5FX.class.getName()).log(Level.SEVERE, null, ex);
         }
         launch(args);
+    
     }
 }  
