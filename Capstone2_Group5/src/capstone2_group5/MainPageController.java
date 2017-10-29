@@ -85,19 +85,6 @@ public class MainPageController implements Initializable {
             
             stage.setScene(scene);
             stage.show();
-            /*
-            WebView browser = new WebView();
-            URL url = getClass().getResource("VisualiserHTML.html");
-            browser.getEngine().load(url.toExternalForm());
-            
-            Stage helpstage = new Stage();
-            Scene helpscene = new Scene(browser);
-            
-            
-            helpstage.setScene(helpscene);
-            helpstage.show();
-            */
-            
         }  
     }
     
