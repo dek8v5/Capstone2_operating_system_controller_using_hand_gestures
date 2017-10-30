@@ -18,15 +18,19 @@ public class BasicCommands implements OSControl{
     private int autoDelay;
     private int primaryMouseClickDelay;
     private Robot robot;
-    private int currentX;
-    private int currentY;
+    private int screenX;
+    private int screenY;
     private int keyPressDelay;
-    private int moveDelay;
-    private int pMulti;
-    private int trackY;
-    private int trackX;
-    private int yCenter;
-    private boolean zAxis;
+    private int mouseMovementDelay;
+    private int pixelMultiplier;
+    private int mousePositionY;
+    private int mousePositionX;
+    private int yPosCalibration;
+    private boolean useZAxis;
+    
+    private int handCurrentX;
+    private int handCurrentY;
+    private int handCurrentZ;
     
     private double joyStickSensitivity;
     
@@ -35,12 +39,12 @@ public class BasicCommands implements OSControl{
         autoDelay = 50;     //Default Values can change later
         primaryMouseClickDelay = 250;
         keyPressDelay = 250;
-        moveDelay = 1;
-        yCenter = 200;
-        pMulti = 2;
+        mouseMovementDelay = 1;
+        yPosCalibration = 200;
+        pixelMultiplier = 2;
         
 //        rightHand = true;
-        zAxis = true;
+        useZAxis = true;
         
         joyStickSensitivity = 2;
         
@@ -60,10 +64,10 @@ public class BasicCommands implements OSControl{
         Point b = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
         Point a = MouseInfo.getPointerInfo().getLocation();
         
-        currentX = (int)b.x;
-        currentY = (int)b.y; 
-        trackX = (int)a.getX();
-        trackY = (int)a.getY();
+        screenX = (int)b.x;
+        screenY = (int)b.y; 
+        mousePositionX = (int)a.getX();
+        mousePositionY = (int)a.getY();
 
         
     }
@@ -73,13 +77,13 @@ public class BasicCommands implements OSControl{
         this.autoDelay = autoDelay;      //for user config
         primaryMouseClickDelay = clickDelay;
         keyPressDelay = keyDelay;
-        this.moveDelay = moveDelay;
+        this.mouseMovementDelay = moveDelay;
         
-        yCenter = ycenter;
-        pMulti = pmulti;
+        yPosCalibration = ycenter;
+        pixelMultiplier = pmulti;
         
 //        rightHand = hand;
-        zAxis = axis;
+        useZAxis = axis;
         
         joyStickSensitivity = joysens;
         
@@ -99,10 +103,10 @@ public class BasicCommands implements OSControl{
         Point b = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
         Point a = MouseInfo.getPointerInfo().getLocation();
         
-        currentX = (int)b.x;
-        currentY = (int)b.y;
-        trackX = (int)a.getX();
-        trackY = (int)a.getY();
+        screenX = (int)b.x;
+        screenY = (int)b.y;
+        mousePositionX = (int)a.getX();
+        mousePositionY = (int)a.getY();
 
     
     }
@@ -190,11 +194,11 @@ public class BasicCommands implements OSControl{
     private void moveMouse(int x, int y){
     
         robot.mouseMove(x, y);
-        robot.delay(moveDelay);
+        robot.delay(mouseMovementDelay);
         
     }
     
-    private void moveJoyStick(double x, double y, double z){
+    private void moveJoyStick(){
         
 //        HandList hands = frame.hands();
 //        Hand myHand;
@@ -211,23 +215,23 @@ public class BasicCommands implements OSControl{
 //        int y_pos = (int)(pos.getY()/joyStickSensitivity);
 //        int z_pos = (int)(pos.getZ()/joyStickSensitivity);
 
-        int x_pos = (int)(x/joyStickSensitivity);
-        int y_pos = (int)(y/joyStickSensitivity);
-        int z_pos = (int)(z/joyStickSensitivity);
+        int x_pos = this.handCurrentX;
+        int y_pos = this.handCurrentY;
+        int z_pos = this.handCurrentZ;
         
-        if(zAxis == true){
-            moveMouse(currentX + x_pos, currentY + z_pos);
-            currentX = currentX + x_pos;
-            currentY = currentY + z_pos;
+        if(useZAxis == true){
+            moveMouse(screenX + x_pos, screenY + z_pos);
+            screenX = screenX + x_pos;
+            screenY = screenY + z_pos;
         }else{
-            moveMouse(currentX + x_pos, currentY - (y_pos-yCenter));
-            currentX = currentX + x_pos;
-            currentY = currentY - (y_pos-yCenter);
+            moveMouse(screenX + x_pos, screenY - (y_pos-yPosCalibration));
+            screenX = screenX + x_pos;
+            screenY = screenY - (y_pos-yPosCalibration);
         }
         
     }
     
-    private void moveMousePad(double x, double y, double z){
+    private void moveMousePad(){
 //    
 //        HandList hands = frame.hands();
 //        Hand myHand;
@@ -240,18 +244,18 @@ public class BasicCommands implements OSControl{
 //        
 //        Vector pos = myHand.palmPosition();
         
-//        int x_pos = (int)pos.getX();
-//        int y_pos = (int)pos.getY();
-//        int z_pos = (int)pos.getZ();
+        int x_pos = this.handCurrentX;
+        int y_pos = this.handCurrentY;
+        int z_pos = this.handCurrentZ;
         
-        if(zAxis == true){
-            moveMouse(currentX + pMulti*(int)x, currentY + pMulti*(int)z);
+        if(useZAxis == true){
+            moveMouse(screenX + pixelMultiplier*(int)x_pos, screenY + pixelMultiplier*(int)z_pos);
         }else{
-            moveMouse(currentX + pMulti*(int)x, currentY - pMulti*(int)(y - yCenter));
+            moveMouse(screenX + pixelMultiplier*(int)x_pos, screenY - pixelMultiplier*(int)(y_pos - yPosCalibration));
         }
     }
     
-    private void moveMouseTrack(double x, double y, double z){
+    private void moveMouseTrack(){
     
 //        HandList hands = frame.hands();
 //        Hand myHand;
@@ -264,24 +268,30 @@ public class BasicCommands implements OSControl{
 //        
 //        Vector pos = myHand.palmPosition();
 //        
-//        int x_pos = (int)pos.getX();
-//        int y_pos = (int)pos.getY();
-//        int z_pos = (int)pos.getZ();
+        int x_pos = this.handCurrentX;
+        int y_pos = this.handCurrentY;
+        int z_pos = this.handCurrentZ;
         
-        if(zAxis == true){
-            moveMouse(trackX + pMulti*(int)x, trackY + pMulti*(int)(z));
+        if(useZAxis == true){
+            moveMouse(mousePositionX + pixelMultiplier*(int)x_pos, mousePositionY + pixelMultiplier*(int)(z_pos));
         }else{
-            moveMouse(trackX + pMulti*(int)x, trackY - pMulti*(int)(y - yCenter));
+            moveMouse(mousePositionX + pixelMultiplier*(int)x_pos, mousePositionY - pixelMultiplier*(int)(y_pos - yPosCalibration));
         }
            
+    }
+    
+    public void mouseScroll(){
+    
+    
+    
     }
     
     public void mouseTrackUpdate(){
     
         Point a = MouseInfo.getPointerInfo().getLocation();
 
-        trackX = (int)a.getX();
-        trackY = (int)a.getY();
+        mousePositionX = (int)a.getX();
+        mousePositionY = (int)a.getY();
     }
     
     public int getKeyCode(KeyEvent a){
@@ -334,7 +344,7 @@ public class BasicCommands implements OSControl{
             case MOUSE_SCROLL_UP:
                 break;
             case MOUSE_MOVE:
-                this.moveMousePad(joyStickSensitivity, joyStickSensitivity, joyStickSensitivity);
+                this.moveMousePad();
                 break;
             case KEY_DOWN:
 //                this.pressKeyDown();
@@ -348,6 +358,8 @@ public class BasicCommands implements OSControl{
 
     @Override
     public void updateHandPosition(Integer x, Integer y, Integer z) {
-        //do with this what you need to
+        this.handCurrentX = x;
+        this.handCurrentY = y;
+        this.handCurrentZ = z;
     }
 }
