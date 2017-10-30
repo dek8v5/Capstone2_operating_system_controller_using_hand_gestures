@@ -67,16 +67,15 @@ public class MainPageController implements Initializable {
     @FXML
     private TableView gestureMappingTable;
     
-
+    
     @FXML
     private TableColumn<Gesture, String> gestureName;
     
     @FXML
     private TableColumn<BasicCommands, String> commandName;        
-    
+    ArrayList<User> users;
     String newName;
     
-    ArrayList<User> users;
     
     //ObservableList<UserProfile> list = FXCollections.observableArrayList(
             
@@ -101,6 +100,7 @@ public class MainPageController implements Initializable {
     @FXML
     private void handleStart(ActionEvent event) {
         LeapService.start(decisionTree);
+        DecisionTreeViewer.start();
     }
     
     @FXML
@@ -163,7 +163,6 @@ public class MainPageController implements Initializable {
     
     
     public void populateProfileList(){
-       
         comboName.getItems().removeAll(comboName.getItems());
         users = UserManager.getAllUsers();
         for(User user : users){               

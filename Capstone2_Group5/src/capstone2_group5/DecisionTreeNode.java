@@ -21,6 +21,10 @@ public class DecisionTreeNode {
         
     }
     
+    public ArrayList<DecisionTreeNode> getChildren(){
+        return new ArrayList(attributeValueToOutcome.values());
+    }
+    
     public DecisionTreeNode(DecisionTree.Attribute attribute){
         this.attribute = attribute;
     }

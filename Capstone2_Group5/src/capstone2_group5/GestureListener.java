@@ -9,15 +9,15 @@ package capstone2_group5;
  *
  * @author Cameron
  */
-public class GestureListener {
-    int gesturePerformedHandlerID;
-    
-    public GestureListener(){
-        gesturePerformedHandlerID = Event.registerHandler(Event.TYPE.GESTURE_PERFORMED, (event) -> {
-            Gesture gesture = (Gesture)event.get("gesture");
-            if(gesture != null){
-                UserManager.handleGesturePerformed(gesture);
-            }
-        });
-    }
-}
+//public class GestureListener {
+//    int gesturePerformedHandlerID;
+//    
+//    public GestureListener(){
+//        gesturePerformedHandlerID = Event.registerHandler(Event.TYPE.GESTURE_PERFORMED, (event) -> {
+//            Gesture gesture = (Gesture)event.get("gesture");
+//            if(gesture != null){
+//                UserManager.handleGesturePerformed(gesture);
+//            }
+//        });
+//    }
+//}

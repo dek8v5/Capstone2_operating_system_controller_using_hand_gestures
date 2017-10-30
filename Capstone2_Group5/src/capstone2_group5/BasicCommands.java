@@ -345,4 +345,9 @@ public class BasicCommands implements OSControl{
                 break;
         }
     }
+
+    @Override
+    public void updateHandPosition(Integer x, Integer y, Integer z) {
+        //do with this what you need to
+    }
 }
