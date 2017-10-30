@@ -5,26 +5,31 @@
  */
 package capstone2_group5;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+
 /**
  *
  * @author Cameron
  */
-public class DistanceRange {
-    private Float lowerBound;
-    private Float upperBound;
-    private Float center;
-    private Float range;
+public class DistanceRange implements JSONWritableReadable{
+    private Double lowerBound;
+    private Double upperBound;
+    private Double center;
+    private Double range;
     
-    public DistanceRange(Float center, Float range) throws Exception{
+    public DistanceRange(Double center, Double range) throws Exception{
         setBounds(center, range);
     }
     
-    public Boolean contains(Float toCheck){
+    public Boolean contains(Double toCheck){
 //        Debugger.print("Checking that " + toCheck + " is within the range " + lowerBound + " - " + upperBound);
         return lowerBound <= toCheck && toCheck <= upperBound;
     }
     
-    private void setBounds(Float center, Float range) throws Exception{
+    private void setBounds(Double center, Double range) throws Exception{
         if(center >= 0 && range >= 0){
             this.center = center;
             this.range = range;
@@ -35,16 +40,49 @@ public class DistanceRange {
         }
     }
     
-    private void setCenter(Float newCenter) throws Exception{
+    public void setCenter(Double newCenter) throws Exception{
         setBounds(newCenter, range);
     }
     
-    private void setRange(Float newRange) throws Exception{
+    public void setRange(Double newRange) throws Exception{
         setBounds(center, newRange);
     }
     
     @Override
     public String toString(){
         return "{" + lowerBound + " - " + upperBound + "}";
+    }
+
+    @Override
+    public String makeJSONString() {
+        return toJSONObject().toJSONString();
+    }
+
+    @Override
+    public void makeSelfFromJSON(String json) {
+        Object obj = JSONValue.parse(json);
+        if(obj != null){
+            JSONObject jsonObj = (JSONObject)obj;
+            makeSelfFromJSONObject(jsonObj);
+        }
+    }
+
+    @Override
+    public JSONObject toJSONObject() {
+        JSONObject obj = new JSONObject();
+        obj.put("center", center);
+        obj.put("range", range);
+        return obj;
+    }
+
+    @Override
+    public void makeSelfFromJSONObject(JSONObject jsonObject) {
+        center = Double.parseDouble(jsonObject.get("center").toString());
+        range = Double.parseDouble(jsonObject.get("range").toString());
+        try{
+            this.setBounds(center, range);
+        }catch(Exception e){
+            Logger.getLogger(DistanceRange.class.getName()).log(Level.SEVERE, null, e);
+        }
     }
 }

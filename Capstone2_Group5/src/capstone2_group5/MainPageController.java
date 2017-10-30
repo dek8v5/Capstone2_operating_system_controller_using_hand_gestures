@@ -11,9 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -25,8 +24,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TreeTableColumn;
-import javafx.util.Callback;
+import javafx.scene.layout.Pane;
+import javafx.scene.web.WebView;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+
 
 /**
  * FXML Controller class
@@ -35,6 +40,8 @@ import javafx.util.Callback;
  */
 public class MainPageController implements Initializable {
 
+    GestureRecognizer decisionTree = new AdvancedRecognizer();
+    
     @FXML
     private Label label;
     
@@ -72,53 +79,46 @@ public class MainPageController implements Initializable {
     private TableColumn<UserManager, Command> columnCommand;
  
     
-    List<Command> command;
+    ArrayList<User> users;
+          
     
     String newName;
     
-    String namelist;
+   
+    @FXML
+    private void handleNewGesture(ActionEvent event) throws IOException, Exception{
+        if(event.getSource() == btnNewGesture){
+            if(UserManager.getCurrentUser() == null){
+                throw new Exception("A user profile must be selected before creating a new gesture.");
+            }
+            LeapService.stop();
+            Stage stage = (Stage) btnNewGesture.getScene().getWindow();
+            
+            Parent gesturePage = FXMLLoader.load(getClass().getResource("GesturePage.fxml"));
+            Scene scene = new Scene(gesturePage);
+            
+            stage.setScene(scene);
+            stage.show();
+        }  
+    }
     
-    ArrayList<String> gestureList;
-    
-    
-    ComboBox<String> combo;
-    //gestureTest
-    
-    private ComboBox<String> comboGesture;
-    
-    ArrayList<User> users;
-    int profileListChangedHandlerId = Event.registerHandler(Event.TYPE.USER_LIST_CHANGED, (event) -> {
-        this.populateProfileList();
-    });
-    
-    ArrayList<UserManager> commands;
-    ArrayList<UserManager> gestures;
-    //private ArrayList<String> gestureTest = new ArrayList(Arrays.asList("Gesture1", "Gesture2", "Gesture3", "Gesture4", "Gesture5", "Gesture6"));
-    
-    //gestureTest
-    //private String gestureTest = "Gesture2";
+   
     
     @FXML
-    private void handleNewProfile(ActionEvent event) throws IOException, Exception{
-       showNewProfile(); 
+    private void handleStart(ActionEvent event) {
+        LeapService.start(decisionTree);
+    }
+    
+    @FXML
+    private void handleNewProfile(ActionEvent event){
+      showNewProfile();      
     }
     
     @FXML
     private void handleSaveNewProfile(ActionEvent event) throws IOException, Exception{
         newName = profileName.getText();
         UserManager.createProfile(newName);
-        users = UserManager.getAllUsers();
-            //print all names on lists
-            for(User user : users){
-                System.out.println(user.getName());
-            }
-        //testLabel.setText("New profile " + profileName.getText() + " is created");    
         populateProfileList();
-        hideNewProfile();
-    }
-         
-    @FXML
-    private void handleCancelNewProfile(ActionEvent event) throws IOException, Exception{
         hideNewProfile();
     }
     
@@ -135,7 +135,7 @@ public class MainPageController implements Initializable {
         //populateTable();
        
         //populateGestureColumn();
-        populateCommandColumn();
+        //populateCommandColumn();
         
         
     }
@@ -171,6 +171,7 @@ public class MainPageController implements Initializable {
     
    
     public void populateCommandColumn(){
+        System.out.println(UserManager.getCurrentUser().getCommandsAndGestures());
         
         /*      
         System.out.println("test");
@@ -275,10 +276,7 @@ public class MainPageController implements Initializable {
         
     }
 */
-    
-    
-        
-        
+           
         
 }
     
