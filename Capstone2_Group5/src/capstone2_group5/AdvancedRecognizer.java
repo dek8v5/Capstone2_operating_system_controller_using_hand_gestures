@@ -6,6 +6,8 @@
 package capstone2_group5;
 
 import com.leapmotion.leap.Frame;
+import com.leapmotion.leap.Hand;
+import com.leapmotion.leap.Vector;
 
 /**
  *
@@ -16,6 +18,15 @@ public class AdvancedRecognizer implements GestureRecognizer{
     
     @Override
     public void scan(Frame frame){
+        if(frame != null){
+            Hand hand = frame.hands().frontmost();
+            if(hand != null){
+                Vector position = hand.palmPosition();
+                if(position != null){
+                    Capstone2_Group5.getOSController().updateHandPosition((int)position.getX(), (int)position.getY(), (int)position.getZ());
+                }
+            }
+        }
         try{
             Gesture gesture = DecisionTree.findGesture(frame);
             if(gesture != null){

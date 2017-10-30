@@ -270,7 +270,9 @@ public class Gesture extends DecisionTreeNode implements JSONWritableReadable{
     
     @Override
     public String toString(){
-        return "  Index: {\n" +
+        return "\nGesture: \n" +
+                " name: " + name + "\n" +
+                "  Index: {\n" +
                "    isExtended: " + index.isExtended + ",\n" +
                "    allowedPositions: " + index.allowedDirection + ",\n" +
                "    bonePositions: {\n" +

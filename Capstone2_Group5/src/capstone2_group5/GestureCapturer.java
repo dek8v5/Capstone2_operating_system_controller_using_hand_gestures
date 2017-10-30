@@ -55,8 +55,8 @@ public class GestureCapturer implements GestureRecognizer{
         Event gestureCaptured = new Event(Event.TYPE.GESTURE_CAPTURED);
         gestureCaptured.addDetail("gesture", captured);
         gestureCaptured.trigger();
-        System.out.println("Captured gesture");
-        System.out.println(captured);
+//        System.out.println("Captured gesture");
+//        System.out.println(captured);
         return captured;
     }
     

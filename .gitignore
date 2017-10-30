@@ -21,6 +21,7 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 /Capstone2_Group5/nbproject/private/
+/Capstone2_Group5/nbproject/project.properties
 /nbproject/private/
 /Capstone2_Group5/build/
 /Testing/nbproject/private/

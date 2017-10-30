@@ -70,11 +70,11 @@ public class GesturePageController implements Initializable {
     private void handleCaptureBtn(ActionEvent event) throws IOException, Exception{
         if(event.getSource() == captureBtn){
             
-            Gesture newGesture = new Gesture();
+            Gesture newGesture;
             try {
                 newGesture = capturer.capture();
                 if(newGesture == null){
-                    System.out.println("Invalid hand");
+                    throw new Exception("No gesture found.  Is your hand above the controller?");
                 } else {
                     TextInputDialog dialog = new TextInputDialog("Gesture Name");
                     dialog.setTitle("Gesture Name");
@@ -95,7 +95,7 @@ public class GesturePageController implements Initializable {
                 dialog.setContentText("Please enter gesture name:");
                 
                 Optional<String> result = dialog.showAndWait();
-                
+
                 if(result.isPresent() && newGesture!= null){
                     newGesture.name = result.get();
                 }

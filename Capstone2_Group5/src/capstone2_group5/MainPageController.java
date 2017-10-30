@@ -15,7 +15,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -107,6 +110,7 @@ public class MainPageController implements Initializable {
     @FXML
     private void handleStart(ActionEvent event) {
         LeapService.start(decisionTree);
+        DecisionTreeViewer.start();
     }
     
     @FXML
@@ -179,107 +183,7 @@ public class MainPageController implements Initializable {
             System.out.println("Dewi");
             return (ObservableValue<Command>) param.getValue().getCommandList(); //To change body of generated methods, choose Tools | Templates.
         });
-*/        
-        
-        
-        
-        
+**/
+    }
  //       gestureMappingTable.getItems().addAll((Object)UserManager.getCommandList2());
-
-
-/*
-        //columnCommand.setCellValueFactory(cellData-> cellData.getValue().toString().toLowerCase());
-        //
-        
-        //columnCommand.setCellValueFactory(cellData-> new SimpleStringProperty(cellData.getValue().toString().toLowerCase()));
-        //gestureMappingTable.getItems().addAll(Command.values());
-*/   
-    }
-    
-    
-    public void populateGestureColumn(){
-/*        System.out.println("test");
-        columnGesture.setCellValueFactory((CellDataFeatures<String, Gesture> param) -> {
-            System.out.println("Dewi");
-            return (ObservableValue<Gesture>) param.getValue(); //To change body of generated methods, choose Tools | Templates.
-        });
-*/
-        //gestureMappingTable.getItems().addAll(gestureTest);
-        //columnGesture.setCellValueFactory(cellData-> new SimpleStringProperty(cellData.getValue().toString()));
-        
-    }
- /*   
-    public void populateTable(){
-        System.out.println("test");
-        columnGesture.setCellValueFactory((TableColumn.CellDataFeatures<UserManager, ArrayList<String>> param) -> {
-            System.out.println("Dewi");
-            System.out.println(param.getValue().getGesture());
-            return param.getValue().getGesture();//To change body of generated methods, choose Tools | Templates.
-        });
-
-//        columnGesture.setCellValueFactory((TableColumn.CellDataFeatures<UserManager, String> cellData) -> {
-//            return cellData.getValue().getGesture();
-//        });
-    }
- */    
- /*   
-    public void populateGestureColumn(){    
-        //columnGesture.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue()));
-        
-        //gestureMappingTable.getItems().addAll(gestureTest);
-        //System.out.println("test");
-        
-        columnGesture.setCellFactory((TableColumn<User, ArrayList<String>> col) -> {
-        System.out.println("test1");   
-            TableCell<User, ArrayList<String>> cell = new TableCell<User, ArrayList<String>>() {
-          
-                @Override
-            protected void updateItem(ArrayList<String> ges, boolean empty) {
-                System.out.println("test2");  
-                super.updateItem(ges, empty);
-                if (empty) {
-                    setGraphic(null);
-                 } 
-                else 
-                {
-                System.out.println("test3");      
-                User rowItem = (User) gestureMappingTable.getItems().get(getIndex());
-                combo.getItems().setAll(ges);
-                combo.setValue(rowItem.getSelectedInfo());
-                setGraphic(combo);
-                }
-            }
-            };
-        System.out.println("test4");  
-        combo.valueProperty().addListener((obs, oldValue, newValue) -> 
-        gestureMappingTable.getItems().get(cell.getIndex()).setSelectedInfo(newValue));
-        System.out.println("test5");  
-        return cell ;
-        });
-        
-        //columnCommand.setCellValueFactory(cellData-> new SimpleStringProperty(cellData.getValue().toString().toLowerCase()));
-        
-        
-        //gestureMappingTable.getItems().addAll(gestureTest.toString(), Command.values().toString());
-        
-        //gestureMappingTable.getColumns().addAll(columnGesture, columnCommand);
-        //gestureMappingTable.getColumns().addAll(columnGesture, columnCommand);
-        //gestureMappingTable.getItems().addAll(gestureTest);
-        
-        
-        
-        //gestureMappingTable.getItems().addAll(gestureTest);
-        
-       // gestureMappingTable.setItems((ObservableList) gestureTest);
-        
-        //gestureMappingTable.getColumns().addAll(columnGesture);
-        
-    }
-*/
-           
-        
 }
-    
-    
-    
-
