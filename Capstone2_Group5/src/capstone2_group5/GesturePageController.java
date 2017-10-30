@@ -95,10 +95,10 @@ public class GesturePageController implements Initializable {
                 dialog.setContentText("Please enter gesture name:");
                 
                 Optional<String> result = dialog.showAndWait();
-                if(result.isPresent() && newGesture != null){
+
+                if(result.isPresent() && newGesture!= null){
                     newGesture.name = result.get();
                 }
-                
                 UserManager.addGestureToCurrentUser(newGesture);
 
             } catch (Exception ex) {
