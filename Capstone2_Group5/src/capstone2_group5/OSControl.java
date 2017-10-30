@@ -11,4 +11,5 @@ package capstone2_group5;
  */
 public interface OSControl {
     public void performCommand(Command command);
+    public void updateHandPosition(Integer x, Integer y, Integer z);
 }

@@ -13,10 +13,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -63,13 +67,13 @@ public class MainPageController implements Initializable {
     @FXML
     private TableView gestureMappingTable;
     
-
+    
     @FXML
     private TableColumn<Gesture, String> gestureName;
     
     @FXML
     private TableColumn<BasicCommands, String> commandName;        
-    
+    ArrayList<User> users;
     String newName;
     
     //ObservableList<UserProfile> list = FXCollections.observableArrayList(
@@ -158,7 +162,6 @@ public class MainPageController implements Initializable {
     
     
     public void populateProfileList(){
-       
         comboName.getItems().removeAll(comboName.getItems());
         users = UserManager.getAllUsers();
         for(User user : users){               

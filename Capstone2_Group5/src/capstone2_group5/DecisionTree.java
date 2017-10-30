@@ -74,6 +74,10 @@ public class DecisionTree {
         THUMB_DISTAL_DIRECTION
     };
     
+    public static DecisionTreeNode getRoot(){
+        return root;
+    }
+    
     public static void create(ArrayList<Gesture> gestureList) throws Exception{
         root = null;
         System.out.println("creating decision tree with gestures");
