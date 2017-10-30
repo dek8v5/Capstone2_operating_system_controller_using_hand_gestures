@@ -16,30 +16,15 @@ import java.awt.event.KeyEvent;
 public class BasicCommands implements OSControl{
     
     private int autoDelay;
-    
-    private Event primaryMouseDown = new Event(Event.TYPE.COMMAND_PERFORMED);
     private int primaryMouseClickDelay;
-    private Event primaryMouseHeldDown = new Event(Event.TYPE.COMMAND_PERFORMED);
-    private Event primaryMouseUp = new Event(Event.TYPE.COMMAND_PERFORMED);
-    
     private Robot robot;
-        
     private int currentX;
     private int currentY;
-    
     private int keyPressDelay;
-    private Event keyHeldDown = new Event(Event.TYPE.COMMAND_PERFORMED);
-    private Event keyDown = new Event(Event.TYPE.COMMAND_PERFORMED);
-    private Event keyUp = new Event(Event.TYPE.COMMAND_PERFORMED);
-    
     private int moveDelay;
-    private Event mouseMoved = new Event(Event.TYPE.COMMAND_PERFORMED);
-
     private int pMulti;
-    
     private int trackY;
     private int trackX;
-    
     private int yCenter;
     private boolean zAxis;
     
@@ -47,21 +32,10 @@ public class BasicCommands implements OSControl{
     
     public BasicCommands() {
         
-        primaryMouseDown.addDetail("command", Command.MOUSE_PRIMARY_DOWN);
-        primaryMouseHeldDown.addDetail("command", Command.MOUSE_PRIMARY_HELD_DOWN);
-        primaryMouseUp.addDetail("command", Command.MOUSE_PRIMARY_UP);
-        
-        keyDown.addDetail("command", Command.KEY_DOWN);
-        keyHeldDown.addDetail("command", Command.KEY_HELD_DOWN);
-        keyUp.addDetail("command", Command.KEY_UP);
-    
-        mouseMoved.addDetail("command", Command.MOUSE_MOVE);
-        
         autoDelay = 50;     //Default Values can change later
         primaryMouseClickDelay = 250;
         keyPressDelay = 250;
         moveDelay = 1;
-        
         yCenter = 200;
         pMulti = 2;
         
@@ -95,16 +69,6 @@ public class BasicCommands implements OSControl{
     }
     
     public BasicCommands(int autoDelay, int clickDelay, int keyDelay, int moveDelay, int ycenter, int pmulti, boolean hand, boolean axis, double joysens){
-        
-        primaryMouseDown.addDetail("command", Command.MOUSE_PRIMARY_DOWN);
-        primaryMouseHeldDown.addDetail("command", Command.MOUSE_PRIMARY_HELD_DOWN);
-        primaryMouseUp.addDetail("command", Command.MOUSE_PRIMARY_UP);
-        
-        keyDown.addDetail("command", Command.KEY_DOWN);
-        keyHeldDown.addDetail("command", Command.KEY_HELD_DOWN);
-        keyUp.addDetail("command", Command.KEY_UP);
-    
-        mouseMoved.addDetail("command", Command.MOUSE_MOVE);
         
         this.autoDelay = autoDelay;      //for user config
         primaryMouseClickDelay = clickDelay;
@@ -146,20 +110,17 @@ public class BasicCommands implements OSControl{
     private void click(int button){
         
         robot.mousePress(button);
-        primaryMouseDown.trigger();
         robot.delay(primaryMouseClickDelay);
         robot.mouseRelease(button);
         robot.delay(primaryMouseClickDelay);
         
-        primaryMouseDown.trigger();
     }
     
     private void holdClick(int button){
     
         robot.mousePress(button);
         robot.delay(primaryMouseClickDelay);
-    
-        primaryMouseHeldDown.trigger();
+
         
     }
     
@@ -168,7 +129,6 @@ public class BasicCommands implements OSControl{
         robot.mouseRelease(button);
         robot.delay(primaryMouseClickDelay);
     
-        primaryMouseUp.trigger();
     }
     
     private void primaryClick(){
@@ -209,7 +169,6 @@ public class BasicCommands implements OSControl{
         robot.keyRelease(keycode);
         robot.delay(keyPressDelay);
         
-        keyDown.trigger();
         
     }
     
@@ -218,7 +177,6 @@ public class BasicCommands implements OSControl{
         robot.keyPress(keycode);
         robot.delay(keyPressDelay);
         
-        keyHeldDown.trigger();
     
     }
     
@@ -227,7 +185,6 @@ public class BasicCommands implements OSControl{
         robot.keyRelease(keycode);
         robot.delay(keyPressDelay);
         
-        keyUp.trigger();
     }
     
     private void moveMouse(int x, int y){
@@ -235,7 +192,6 @@ public class BasicCommands implements OSControl{
         robot.mouseMove(x, y);
         robot.delay(moveDelay);
         
-        mouseMoved.trigger();
     }
     
     private void moveJoyStick(double x, double y, double z){
@@ -359,7 +315,7 @@ public class BasicCommands implements OSControl{
                 this.primaryClickRelease();
                 break;
             case MOUSE_PRIMARY_CLICK:
-                
+                this.primaryClick();
                 break;
             case MOUSE_SECONDARY_DOWN:
                 this.secondaryClick();
@@ -371,12 +327,14 @@ public class BasicCommands implements OSControl{
                 this.secondaryClickRelease();
                 break;
             case MOUSE_SECONDARY_CLICK:
+                this.secondaryClick();
                 break;
             case MOUSE_SCROLL_DOWN:
                 break;
             case MOUSE_SCROLL_UP:
                 break;
             case MOUSE_MOVE:
+                this.moveMousePad(joyStickSensitivity, joyStickSensitivity, joyStickSensitivity);
                 break;
             case KEY_DOWN:
 //                this.pressKeyDown();
