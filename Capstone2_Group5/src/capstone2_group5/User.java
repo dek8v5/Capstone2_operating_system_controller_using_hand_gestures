@@ -118,6 +118,7 @@ public class User implements JSONWritableReadable {
     }
     
     public HashMap<Command, Gesture> getCommandsAndGestures(){
+        
         return commandToGesture;
     }
 

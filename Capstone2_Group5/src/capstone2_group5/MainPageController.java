@@ -9,31 +9,33 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
-import javafx.scene.web.WebView;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.util.Callback;
+import javafx.util.converter.DefaultStringConverter;
 
 
 /**
@@ -64,6 +66,9 @@ public class MainPageController implements Initializable {
     private TextField profileName;
     
     @FXML
+    private Button start;
+    
+    @FXML
     private Label testLabel;
     
     @FXML
@@ -73,21 +78,43 @@ public class MainPageController implements Initializable {
     private ComboBox comboName;
 
     @FXML
-    private TableView<UserManager> gestureMappingTable;
+    private TableView<Map.Entry<Command, Gesture>> gestureMappingTable;
 
     @FXML
-    private TableColumn<UserManager, Gesture> columnGesture;
+    private TableColumn<Map.Entry<Command, Gesture>, String> columnGesture;
     
     @FXML
-    private TableColumn<UserManager, Command> columnCommand;
+    private TableColumn<Map.Entry<Command, Gesture>, String> columnCommand;
  
     
     ArrayList<User> users;
+    
+    
+    int profileListChangedHandlerId = Event.registerHandler(Event.TYPE.USER_LIST_CHANGED, (event) -> {
+         this.populateProfileList();
+    });
           
     
     String newName;
     
+    String selectedUser;
+    
    
+    
+ /*   //TESTING
+    HashMap<String, String> commandGesture = new HashMap<String,String>(){{
+        put("Command1", "null");
+        put("Command2", "null");
+        put("Command3", "null");
+    }};
+  */
+    
+    HashMap<Command, Gesture> commandAndGesture;
+    ArrayList<Gesture> gestures;
+    ObservableList<String> gestureCombo;
+    
+ //////////TEST ENDS
+    
     @FXML
     private void handleNewGesture(ActionEvent event) throws IOException, Exception{
         if(event.getSource() == btnNewGesture){
@@ -103,6 +130,11 @@ public class MainPageController implements Initializable {
             stage.setScene(scene);
             stage.show();
         }  
+    }
+    
+    @FXML
+    private void handleCancelNewProfile(ActionEvent event) throws IOException, Exception{
+        hideNewProfile();
     }
     
    
@@ -123,25 +155,75 @@ public class MainPageController implements Initializable {
         newName = profileName.getText();
         UserManager.createProfile(newName);
         populateProfileList();
+        selectedUser = newName;
+        comboName.getSelectionModel().select(selectedUser);
         hideNewProfile();
+        UserManager.setCurrentUser(selectedUser);
+        loadSelectedUser(selectedUser);
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         hideNewProfile();
-        populateProfileList();  
+        populateProfileList();
+ 
+        tableTest();
+     
+    }
+    
+    //FOR TEST PURPOSE
+    @FXML
+    public void tableTest(){
+        
+        gestureCombo = FXCollections.observableArrayList();
+        //hasmap data
+        commandAndGesture = UserManager.getCurrentUser().getCommandsAndGestures();
+        
+        gestures = UserManager.getCurrentUser().getGestures();
+      
+        gestures.forEach((gesture) -> {
+            gestureCombo.add(gesture.name);});
+        
+//        System.out.println(UserManager.getCurrentUser().getGestures());
+        //for combobox inside gesture column
+        //gestureCombo = FXCollections.observableArrayList(UserManager.getCurrentUser().getGestures());
+        //gestureCombo.addAll("Gesture11", "Gesture12", "Gesture13", "Gesture14");
+        
+        //if the UserManagerdata are ready -> uncomment this change the arraylist to be gesture diamond
+        //gestureCombo = FXCollections.observableArrayList(UserManager.getCurrentUser().getGestures());
+      
+        columnCommand.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<Command, Gesture>, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<Command, Gesture>, String> p) {
+                //first column -> key (Gesture)
+                return new SimpleStringProperty(p.getValue().getKey().toTableString().toLowerCase());
+            }
+        });
         
         
-        //System.out.println(UserManager.getCommandList());
-        //System.out.println(UserManager.getGesture());
+        columnGesture.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<Command, Gesture>, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<Command, Gesture>, String> p) {
+                //second column value (Command)
+                System.out.println("test here");
+                return new SimpleStringProperty(p.getValue().getValue() == null ? "null": p.getValue().getValue().name);
+            }
+        });
+        columnGesture.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), gestureCombo));
         
-        //printTest();
-        //populateTable();
-       
-        //populateGestureColumn();
-        //populateCommandColumn();
+        columnGesture.setOnEditCommit(new javafx.event.EventHandler<TableColumn.CellEditEvent<Map.Entry<Command, Gesture>, String>>(){
+         @Override
+         public void handle(TableColumn.CellEditEvent<Map.Entry<Command, Gesture>, String> event) {
+             System.out.println("Value selected is " + event.getNewValue()); //To change body of generated methods, choose Tools | Templates.
+         }
+        });
         
+        ObservableList<Map.Entry<Command, Gesture>> items = FXCollections.observableArrayList(commandAndGesture.entrySet());
         
+        gestureMappingTable.getItems().addAll(items);
+        
+        gestureMappingTable.setEditable(true);
+    
     }
     
     
@@ -168,22 +250,14 @@ public class MainPageController implements Initializable {
     //action for selected user profile combobox
     @FXML
     private void handleComboProfile(ActionEvent event) throws IOException, Exception{
-      // String selectedProfile = comboName.getSelectionModel().getSelectedItem();
-      // UserManager.setCurrentUser(selectedProfile);
-       //show the current user gesture lists
+      selectedUser = (String) comboName.getSelectionModel().getSelectedItem();
+      UserManager.setCurrentUser(selectedUser);
+      //show the current user gesture lists
+      System.out.println(UserManager.getCurrentUser().makeJSONString());
     }
     
-   
-    public void populateCommandColumn(){
-        System.out.println(UserManager.getCurrentUser().getCommandsAndGestures());
+    public void loadSelectedUser(String userSelected){
         
-        /*      
-        System.out.println("test");
-        columnCommand.setCellValueFactory((CellDataFeatures<UserManager, Command> param) -> {
-            System.out.println("Dewi");
-            return (ObservableValue<Command>) param.getValue().getCommandList(); //To change body of generated methods, choose Tools | Templates.
-        });
-**/
     }
- //       gestureMappingTable.getItems().addAll((Object)UserManager.getCommandList2());
+
 }

@@ -421,7 +421,9 @@ public class UserManager implements JSONWritableReadable {
         });
     }
     
-  
+    public Command[] getCommands(){
+        return Command.values();
+    }
     
    
     

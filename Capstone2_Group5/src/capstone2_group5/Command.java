@@ -25,8 +25,9 @@ public enum Command {
     KEY_HELD_DOWN,
     KEY_UP;
 
-    @Override
-    public String toString(){
+    
+    public String toTableString(){
         return this.name().replace("_", " ");
     }
+
 }
