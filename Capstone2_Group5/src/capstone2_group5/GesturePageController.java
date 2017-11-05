@@ -99,7 +99,6 @@ public class GesturePageController implements Initializable {
                 if(result.isPresent() && newGesture != null){
                     newGesture.name = result.get();
                 }
-                
                 UserManager.addGestureToCurrentUser(newGesture);
 
             } catch (Exception ex) {
