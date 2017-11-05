@@ -11,16 +11,13 @@ package capstone2_group5;
  */
 public enum Command {
     MOUSE_PRIMARY_DOWN,
-    MOUSE_PRIMARY_HELD_DOWN,
     MOUSE_PRIMARY_UP,
     MOUSE_PRIMARY_CLICK,
     MOUSE_SECONDARY_DOWN,
-    MOUSE_SECONDARY_HELD_DOWN,
     MOUSE_SECONDARY_UP,
     MOUSE_SECONDARY_CLICK,
     MOUSE_MOVE,
-    MOUSE_SCROLL_UP,
-    MOUSE_SCROLL_DOWN,
+    MOUSE_SCROLL,
     KEY_DOWN,
     KEY_HELD_DOWN,
     KEY_UP;
@@ -28,6 +25,7 @@ public enum Command {
     
     public String toTableString(){
         return this.name().replace("_", " ");
+
     }
 
 }

@@ -256,8 +256,12 @@ public class MainPageController implements Initializable {
       System.out.println(UserManager.getCurrentUser().makeJSONString());
     }
     
+
     public void loadSelectedUser(String userSelected){
+
         
     }
 
+
 }
+
