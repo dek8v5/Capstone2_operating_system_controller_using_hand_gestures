@@ -8,7 +8,11 @@ package capstone2_group5;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,13 +22,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
-import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+
 
 /**
  * FXML Controller class
@@ -33,6 +41,8 @@ import javafx.stage.Stage;
  */
 public class MainPageController implements Initializable {
 
+    GestureRecognizer decisionTree = new AdvancedRecognizer();
+    
     @FXML
     private Label label;
     
@@ -58,26 +68,31 @@ public class MainPageController implements Initializable {
     private Label nameLabelTest;
     
     @FXML
-    private ComboBox<String> comboName;
+    private ComboBox comboName;
+
+    @FXML
+    private TableView<UserManager> gestureMappingTable;
+
+    @FXML
+    private TableColumn<UserManager, Gesture> columnGesture;
     
     @FXML
-    private TableView gestureMappingTable;
+    private TableColumn<UserManager, Command> columnCommand;
+ 
     
-    @FXML
-    private TableColumn<Gesture, String> gestureName;
-    
-    @FXML
-    private TableColumn<BasicCommands, String> commandName;        
+    ArrayList<User> users;
+          
     
     String newName;
     
-    //ObservableList<UserProfile> list = FXCollections.observableArrayList(
-            
-    //);
+   
     @FXML
     private void handleNewGesture(ActionEvent event) throws IOException, Exception{
         if(event.getSource() == btnNewGesture){
-            
+            if(UserManager.getCurrentUser() == null){
+                throw new Exception("A user profile must be selected before creating a new gesture.");
+            }
+            LeapService.stop();
             Stage stage = (Stage) btnNewGesture.getScene().getWindow();
             
             Parent gesturePage = FXMLLoader.load(getClass().getResource("GesturePage.fxml"));
@@ -85,73 +100,94 @@ public class MainPageController implements Initializable {
             
             stage.setScene(scene);
             stage.show();
-            /*
-            WebView browser = new WebView();
-            URL url = getClass().getResource("VisualiserHTML.html");
-            browser.getEngine().load(url.toExternalForm());
-            
-            Stage helpstage = new Stage();
-            Scene helpscene = new Scene(browser);
-            
-            
-            helpstage.setScene(helpscene);
-            helpstage.show();
-            */
-            
         }  
     }
     
+   
+    
     @FXML
-    private void handleNewProfile(ActionEvent event) throws IOException, Exception{
-        Stage stage; 
-        Parent root;
-        
-        if(event.getSource()==btnNewProfile){
-            stage = new Stage();
-            //load up OTHER FXML document
-            root = FXMLLoader.load(getClass().getResource("newProfile.fxml"));
-            stage.setScene(new Scene(root));
-            stage.setTitle("Create New Profile");
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initOwner(btnNewProfile.getScene().getWindow());
-            stage.showAndWait();
-        }
-        else
-        {
-            if(event.getSource() == btnProfileCancel){
-                stage = (Stage)btnProfileCancel.getScene().getWindow();
-                stage.close();
-            }
-            if(event.getSource() == btnProfileSave){
-                //System.out.println("Dewi");
-                //stage = (Stage)btnProfileSave.getScene().getWindow();
-                if((profileName.getText()).isEmpty()){
-                    testLabel.setText("your new profile name is empty");
-                }
-                else{
-                    newName = profileName.getText();
-                    UserManager.createProfile(newName);
-                
-                    System.out.println("----------------");
-                    ArrayList<User> users;
-                    users = UserManager.getAllUsers();
-                    for(User user : users){
-                        System.out.println(user.getName());
-                    }
-                //System.out.println(newName.toString());
-                testLabel.setText("New profile " + profileName.getText() + " is created");
-            
-                //stage=(Stage) profileCancel.getScene().getWindow();
-                //root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-                }
-            } 
-        }
+    private void handleStart(ActionEvent event) {
+        LeapService.start(decisionTree);
+        DecisionTreeViewer.start();
+    }
+    
+    @FXML
+    private void handleNewProfile(ActionEvent event){
+      showNewProfile();      
+    }
+    
+    @FXML
+    private void handleSaveNewProfile(ActionEvent event) throws IOException, Exception{
+        newName = profileName.getText();
+        UserManager.createProfile(newName);
+        populateProfileList();
+        hideNewProfile();
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        hideNewProfile();
+        populateProfileList();  
+        
+        
+        //System.out.println(UserManager.getCommandList());
+        //System.out.println(UserManager.getGesture());
+        
+        //printTest();
+        //populateTable();
        
-    }    
+        //populateGestureColumn();
+        //populateCommandColumn();
+        
+        
+    }
+    
+    
+    public void populateProfileList(){ 
+        comboName.getItems().removeAll(comboName.getItems());
+        users = UserManager.getAllUsers();
+        for(User user : users){               
+            comboName.getItems().add(user.getName()); 
+        }
+    }
+    
+    public void hideNewProfile(){
+        profileName.setVisible(false);
+        btnProfileCancel.setVisible(false);
+        btnProfileSave.setVisible(false);
+    }
+    
+    public void showNewProfile(){
+        profileName.setVisible(true);
+        btnProfileCancel.setVisible(true);
+        btnProfileSave.setVisible(true); 
+    }
+    
+    //action for selected user profile combobox
+    @FXML
+    private void handleComboProfile(ActionEvent event) throws IOException, Exception{
+      // String selectedProfile = comboName.getSelectionModel().getSelectedItem();
+      // UserManager.setCurrentUser(selectedProfile);
+       //show the current user gesture lists
+    }
+    
+   @FXML
+    public void populateCommandColumn(){
+        System.out.println(UserManager.getCurrentUser().getCommandsAndGestures());
+        
+        /*      
+        System.out.println("test");
+        columnCommand.setCellValueFactory((CellDataFeatures<UserManager, Command> param) -> {
+            System.out.println("Dewi");
+            return (ObservableValue<Command>) param.getValue().getCommandList(); //To change body of generated methods, choose Tools | Templates.
+        });
+**/
+    }
+ //       gestureMappingTable.getItems().addAll((Object)UserManager.getCommandList2());
+    
+    
+    
+    public void populateGestureColumn(){
+        System.out.println(UserManager.getCurrentUser().getCommandsAndGestures());
+    }
 }
-
- 

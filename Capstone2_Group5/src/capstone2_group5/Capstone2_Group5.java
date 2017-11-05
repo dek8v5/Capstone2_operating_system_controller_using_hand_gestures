@@ -6,8 +6,6 @@
 package capstone2_group5;
 
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -26,7 +24,6 @@ public class Capstone2_Group5{
     public static void main(String choice){
         // TODO code application logic here
         
-        GestureRecognizer decisionTree = new AdvancedRecognizer();
 //        DecisionTree.init();
 
         Thread mainThread = new Thread(new Runnable(){
@@ -62,7 +59,7 @@ public class Capstone2_Group5{
                             break;
                         case "2":
 //                            LeapService.start(basicRecognizer);
-                            LeapService.start(decisionTree);
+//                            LeapService.start(decisionTree);
                             break;
                         case "3":
                             TestSuite.run(); //MUST ADD -ea TO VM OPTIONS.  GO TO PROJECT PROPERTIES, RUN, VM OPTIONS

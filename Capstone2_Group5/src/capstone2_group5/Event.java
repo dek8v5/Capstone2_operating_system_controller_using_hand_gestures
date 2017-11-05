@@ -13,8 +13,8 @@ import java.util.HashMap;
  */
 public class Event {
     private static Integer handlerID = 1;
-    private static HashMap<Event.TYPE, HashMap> eventHandlers = new HashMap();
-    private static HashMap<Integer, Event.TYPE> handlerIdToType = new HashMap();
+    private static HashMap<Event.TYPE, HashMap> eventHandlers = new HashMap<>();
+    private static HashMap<Integer, Event.TYPE> handlerIdToType = new HashMap<>();
     
     public enum TYPE{
         COMMAND_PERFORMED,
@@ -43,7 +43,7 @@ public class Event {
     public static Integer registerHandler(Event.TYPE event, EventHandler handler){
         Integer id = Event.getNextID();
         if(!eventHandlers.containsKey(event)){
-            HashMap<Integer, EventHandler> handlerHash = new HashMap();
+            HashMap<Integer, EventHandler> handlerHash = new HashMap<>();
             eventHandlers.put(event, handlerHash);
         }
         eventHandlers.get(event).put(id, handler);
@@ -67,7 +67,7 @@ public class Event {
     }
     
     public final Event.TYPE type;
-    private HashMap details = new HashMap();
+    private HashMap details = new HashMap<>();
     
     public Event(Event.TYPE type){
         this.type = type;

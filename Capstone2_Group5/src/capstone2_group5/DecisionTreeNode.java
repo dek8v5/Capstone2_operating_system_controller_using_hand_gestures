@@ -12,14 +12,17 @@ import java.util.HashMap;
  *
  * @author Cameron
  */
-public class DecisionTreeNode extends JSON {
+public class DecisionTreeNode {
     private HashMap<Object, DecisionTreeNode> attributeValueToOutcome;
     private DecisionTree.Attribute attribute;
-//    private Object attributeValue;
     private ArrayList<DecisionTree.Attribute> usedAttributes;
     
     public DecisionTreeNode(){
         
+    }
+    
+    public ArrayList<DecisionTreeNode> getChildren(){
+        return new ArrayList(attributeValueToOutcome.values());
     }
     
     public DecisionTreeNode(DecisionTree.Attribute attribute){
@@ -52,11 +55,6 @@ public class DecisionTreeNode extends JSON {
                 if(!value.getClass().getName().equals(Boolean.class.getName())){
                    throw new Exception("Attribute " + attribute + " expects a boolean value"); 
                 }
-//            case GRAB_ANGLE:
-//                //value should be a RadianRange
-//                if(!value.getClass().getName().equals(RadianRange.class.getName())){
-//                    throw new Exception("Attribute " + attribute + " expects a RadianRange");
-//                }
                 break;
             case PALM_NORMAL:
             case INDEX_DIRECTION:
@@ -88,38 +86,28 @@ public class DecisionTreeNode extends JSON {
                     throw new Exception("Attribute " + attribute + " expects a VectorRange");
                 }
                 break;
-//            case PINCH_DISTANCE:
-//                //value should be DistanceRange
-//                if(!value.getClass().getName().equals(DistanceRange.class.getName())){
-//                    throw new Exception("Attribute " + attribute + " expects a DistanceRange");
-//                }
         }
         if(attributeValueToOutcome == null){
-            attributeValueToOutcome = new HashMap();
+            attributeValueToOutcome = new HashMap<>();
         }
         attributeValueToOutcome.put(value, node);
     }
     
     public void setUsedAttributes(ArrayList<DecisionTree.Attribute> attributes){
-        usedAttributes = new ArrayList();
-        attributes.forEach((att) -> {
-            usedAttributes.add(att);
-        });
+        usedAttributes = new ArrayList<>(attributes);
     }
     
     public ArrayList<DecisionTree.Attribute> getUsedAttributes(){
-        ArrayList<DecisionTree.Attribute> attributes = new ArrayList();
-        usedAttributes.forEach((att) -> {
-            attributes.add(att);
-        });
+        ArrayList<DecisionTree.Attribute> attributes = new ArrayList<>(usedAttributes);
         return attributes;
     }
     
-    public DecisionTreeNode getNextNodeByValue(Object value) throws Exception{
+    public ArrayList<DecisionTreeNode> getNextNodesByValue(Object value) throws Exception{
+        ArrayList<DecisionTreeNode> nodeList = new ArrayList<>();
         if(attributeValueToOutcome == null){
-            return null;
+            return nodeList;
         }
-        DecisionTreeNode toReturn = null;
+//        DecisionTreeNode toReturn = null;
         switch(attribute){
             case INDEX_EXTENDED:
             case MIDDLE_EXTENDED:
@@ -130,26 +118,8 @@ public class DecisionTreeNode extends JSON {
                 if(!value.getClass().getName().equals(Boolean.class.getName())){
                     throw new Exception("Attribute " + attribute + " must be given a boolean to be compared against");
                 }
-                return attributeValueToOutcome.get(value);
-//            case GRAB_ANGLE:
-//                //value should be Float. compare against RadianRange
-//                if(!value.getClass().getName().equals(float.class.getName()) && !value.getClass().getName().equals(Float.class.getName())){
-//                    throw new Exception("Attribute " + attribute + " must be given a float to be compared against");
-//                }
-//                ArrayList<DecisionTreeNode> viableNodes = new ArrayList();
-//                attributeValueToOutcome.forEach((compare, node)-> {
-//                    RadianRange compareTo = (RadianRange)compare;
-//                    if(compareTo.contains((float)value)){
-//                        viableNodes.add(node);
-//                    }
-//                });
-//                if(viableNodes.isEmpty()){
-//                    toReturn = null;
-//                } else if(viableNodes.size() == 1){
-//                    toReturn = viableNodes.get(0);
-//                } else {
-//                    throw new Exception("Multiple viable nodes found in tree for attribute <" + attribute + "> with value of <" + value + ">");
-//                }
+                nodeList.add(attributeValueToOutcome.get(value));
+                break;
             case PALM_NORMAL:
             case INDEX_DIRECTION:
             case MIDDLE_DIRECTION:
@@ -179,44 +149,25 @@ public class DecisionTreeNode extends JSON {
                 if(!value.getClass().getName().equals(Vector.class.getName())){
                     throw new Exception("Attribute " + attribute + " must be given a Vector to be compared against");
                 }
-                ArrayList<DecisionTreeNode> possibleNodes = new ArrayList();
                 attributeValueToOutcome.forEach((compare, node)-> {
                     VectorRange compareTo = (VectorRange)compare;
                     if(compareTo.contains((Vector)value)){
-                        possibleNodes.add(node);
+                        nodeList.add(node);
                     }
                 });
-                if(possibleNodes.isEmpty()){
-                    toReturn = null;
-                } else if(possibleNodes.size() == 1){
-                    toReturn = possibleNodes.get(0);
-                } else {
-                    throw new Exception("Multiple viable nodes found in tree for attribute <" + attribute + "> with value of <" + value + ">");
-                }
-//            case PINCH_DISTANCE:
-//                //value should be Float. compare against DistanceRange
-//                if(!value.getClass().getName().equals(float.class.getName()) && !value.getClass().getName().equals(Float.class.getName())){
-//                    throw new Exception("Attribute " + attribute + " must be given a float to be compared against");
-//                }
-//                ArrayList<DecisionTreeNode> nodes = new ArrayList();
-//                attributeValueToOutcome.forEach((compare, node)-> {
-//                    DistanceRange compareTo = (DistanceRange)compare;
-//                    if(compareTo.contains((float)value)){
-//                        nodes.add(node);
-//                    }
-//                });
-//                if(nodes.isEmpty()){
+                break;
+//                if(possibleNodes.isEmpty()){
 //                    toReturn = null;
-//                } else if(nodes.size() == 1){
-//                    toReturn = nodes.get(0);
+//                } else if(possibleNodes.size() == 1){
+//                    toReturn = possibleNodes.get(0);
 //                } else {
 //                    throw new Exception("Multiple viable nodes found in tree for attribute <" + attribute + "> with value of <" + value + ">");
 //                }
         }
-        return toReturn;
+        return nodeList;
     }
     
     public String toString(){
-        return this.attribute + ": " + this.attributeValueToOutcome;
+        return "Decision tree node with attribute " + this.attribute + " and value " + this.attributeValueToOutcome;
     }
 }
