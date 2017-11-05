@@ -27,8 +27,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
-import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
@@ -173,7 +171,7 @@ public class MainPageController implements Initializable {
        //show the current user gesture lists
     }
     
-   
+   @FXML
     public void populateCommandColumn(){
         System.out.println(UserManager.getCurrentUser().getCommandsAndGestures());
         
@@ -186,4 +184,10 @@ public class MainPageController implements Initializable {
 **/
     }
  //       gestureMappingTable.getItems().addAll((Object)UserManager.getCommandList2());
+    
+    
+    
+    public void populateGestureColumn(){
+        System.out.println(UserManager.getCurrentUser().getCommandsAndGestures());
+    }
 }

@@ -6,125 +6,67 @@
 package capstone2_group5;
 
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 /**
  *
  * @author alec
+ * 
+ *  ~To-Do~
+ * 
+ *  - add functions for keycodes: backspace 8, enter 13, shift 16, tap 9, left 37, up 38, right 39, down 40, caps 20
+ * 
+ *  - add functions for copy/cut/paste, 
+ *      - Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+ * 
+ *  - Spruce up mouseScroll
+ * 
+ *  - sets/gets
+ * 
  */
+
 public class BasicCommands implements OSControl{
     
-    private int autoDelay;
-    
-    private Event primaryMouseDown = new Event(Event.TYPE.COMMAND_PERFORMED);
-    private int primaryMouseClickDelay;
-    private Event primaryMouseHeldDown = new Event(Event.TYPE.COMMAND_PERFORMED);
-    private Event primaryMouseUp = new Event(Event.TYPE.COMMAND_PERFORMED);
-    
     private Robot robot;
-        
-    private int currentX;
-    private int currentY;
     
-    private int keyPressDelay;
-    private Event keyHeldDown = new Event(Event.TYPE.COMMAND_PERFORMED);
-    private Event keyDown = new Event(Event.TYPE.COMMAND_PERFORMED);
-    private Event keyUp = new Event(Event.TYPE.COMMAND_PERFORMED);
+    private int autoDelay = 50;
+    private int keyPressDelay = 250;
+    private int mouseClickDelay = 250;
+    private int mouseMovementDelay = 0;
     
-    private int moveDelay;
-    private Event mouseMoved = new Event(Event.TYPE.COMMAND_PERFORMED);
+    private int screenHeight;
+    private int screenWidth;
+    
+    private int mousePositionX;
+    private int mousePositionY;
 
-    private int pMulti;
+    private int trackPadWindowHeight = 500;    
+    private int trackPadWindowWidth = 500;
     
-    private int trackY;
-    private int trackX;
+    private float joyStickSensitivity = 100; //is percent
+    private float padSensitivity = 500;      //is percent
     
-    private int yCenter;
-    private boolean zAxis;
+    private boolean useZAxis = true;
+    private int yPosCalibration = 500;
     
-    private double joyStickSensitivity;
-    
-    public BasicCommands() {
-        
-        primaryMouseDown.addDetail("command", Command.MOUSE_PRIMARY_DOWN);
-        primaryMouseHeldDown.addDetail("command", Command.MOUSE_PRIMARY_HELD_DOWN);
-        primaryMouseUp.addDetail("command", Command.MOUSE_PRIMARY_UP);
-        
-        keyDown.addDetail("command", Command.KEY_DOWN);
-        keyHeldDown.addDetail("command", Command.KEY_HELD_DOWN);
-        keyUp.addDetail("command", Command.KEY_UP);
-    
-        mouseMoved.addDetail("command", Command.MOUSE_MOVE);
-        
-        autoDelay = 50;     //Default Values can change later
-        primaryMouseClickDelay = 250;
-        keyPressDelay = 250;
-        moveDelay = 1;
-        
-        yCenter = 200;
-        pMulti = 2;
-        
-//        rightHand = true;
-        zAxis = true;
-        
-        joyStickSensitivity = 2;
+    private int handCurrentX;
+    private int handCurrentY;
+    private int handCurrentZ;
+
+    public BasicCommands(){
+            
+        GraphicsDevice screenDev = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Point pointer = MouseInfo.getPointerInfo().getLocation();
         
         try{
             
-            robot = new Robot();
-            
-            robot.setAutoDelay(autoDelay);    
-            robot.setAutoWaitForIdle(false);  //no auto delay for now
-            
-        }catch(AWTException e){
-            
-            e.printStackTrace(System.out); //probably need to handle better eventually
-            
-        }
-        
-        Point b = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
-        Point a = MouseInfo.getPointerInfo().getLocation();
-        
-        currentX = (int)b.x;
-        currentY = (int)b.y; 
-        trackX = (int)a.getX();
-        trackY = (int)a.getY();
-
-        
-    }
-    
-    public BasicCommands(int autoDelay, int clickDelay, int keyDelay, int moveDelay, int ycenter, int pmulti, boolean hand, boolean axis, double joysens){
-        
-        primaryMouseDown.addDetail("command", Command.MOUSE_PRIMARY_DOWN);
-        primaryMouseHeldDown.addDetail("command", Command.MOUSE_PRIMARY_HELD_DOWN);
-        primaryMouseUp.addDetail("command", Command.MOUSE_PRIMARY_UP);
-        
-        keyDown.addDetail("command", Command.KEY_DOWN);
-        keyHeldDown.addDetail("command", Command.KEY_HELD_DOWN);
-        keyUp.addDetail("command", Command.KEY_UP);
-    
-        mouseMoved.addDetail("command", Command.MOUSE_MOVE);
-        
-        this.autoDelay = autoDelay;      //for user config
-        primaryMouseClickDelay = clickDelay;
-        keyPressDelay = keyDelay;
-        this.moveDelay = moveDelay;
-        
-        yCenter = ycenter;
-        pMulti = pmulti;
-        
-//        rightHand = hand;
-        zAxis = axis;
-        
-        joyStickSensitivity = joysens;
-        
-        try{
-            
-            robot = new Robot();
+            robot = new Robot(screenDev);
             
             robot.setAutoDelay(this.autoDelay);    
-            robot.setAutoWaitForIdle(false);  //no auto delay for now
+            robot.setAutoWaitForIdle(false);
             
         }catch(AWTException e){
             
@@ -132,61 +74,48 @@ public class BasicCommands implements OSControl{
             
         }    
         
-        Point b = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
-        Point a = MouseInfo.getPointerInfo().getLocation();
+        screenHeight = screenSize.height;
+        screenWidth = screenSize.width;
         
-        currentX = (int)b.x;
-        currentY = (int)b.y;
-        trackX = (int)a.getX();
-        trackY = (int)a.getY();
+        mousePositionX = (int)pointer.getX();
+        mousePositionY = (int)pointer.getY();
 
-    
     }
     
     private void click(int button){
         
         robot.mousePress(button);
-        primaryMouseDown.trigger();
-        robot.delay(primaryMouseClickDelay);
+        robot.delay(mouseClickDelay);
         robot.mouseRelease(button);
-        robot.delay(primaryMouseClickDelay);
+        robot.delay(mouseClickDelay);
         
-        primaryMouseDown.trigger();
     }
     
     private void holdClick(int button){
     
         robot.mousePress(button);
-        robot.delay(primaryMouseClickDelay);
-    
-        primaryMouseHeldDown.trigger();
+        robot.delay(mouseClickDelay);
+
         
     }
     
     private void releaseClick(int button){
     
         robot.mouseRelease(button);
-        robot.delay(primaryMouseClickDelay);
+        robot.delay(mouseClickDelay);
     
-        primaryMouseUp.trigger();
     }
     
     private void primaryClick(){
-    
         this.click(InputEvent.BUTTON1_MASK);
-        
     }
     
     private void secondaryClick(){
-    
-        this.click(InputEvent.BUTTON2_MASK);
-        
+        this.click(InputEvent.BUTTON2_MASK);  
     }
     
-    private void primaryClickHold(){
-    
-        this.holdClick(InputEvent.BUTTON1_MASK);
-        
+    private void primaryClickHold(){   
+        this.holdClick(InputEvent.BUTTON1_MASK);      
     }
     
     private void secondaryClickHold(){
@@ -194,7 +123,6 @@ public class BasicCommands implements OSControl{
     }
     
     private void primaryClickRelease(){
-    
         this.releaseClick(InputEvent.BUTTON1_MASK);
     }
     
@@ -202,23 +130,18 @@ public class BasicCommands implements OSControl{
         this.releaseClick(InputEvent.BUTTON2_MASK);
     }
     
-    private void pressKeyDown(int keycode){
-    
-        robot.keyPress(keycode);
-        robot.delay(keyPressDelay);
-        robot.keyRelease(keycode);
-        robot.delay(keyPressDelay);
+    private void pressKey(int keycode){
         
-        keyDown.trigger();
+        this.holdKey(keycode);
+        this.releaseKey(keycode);
         
     }
     
-    private void holdKeyDown(int keycode){
+    private void holdKey(int keycode){
         
         robot.keyPress(keycode);
         robot.delay(keyPressDelay);
         
-        keyHeldDown.trigger();
     
     }
     
@@ -227,115 +150,92 @@ public class BasicCommands implements OSControl{
         robot.keyRelease(keycode);
         robot.delay(keyPressDelay);
         
-        keyUp.trigger();
     }
     
     private void moveMouse(int x, int y){
     
         robot.mouseMove(x, y);
-        robot.delay(moveDelay);
+        robot.delay(mouseMovementDelay);
         
-        mouseMoved.trigger();
     }
     
-    private void moveJoyStick(double x, double y, double z){
+    private void moveJoyStick(){
         
-//        HandList hands = frame.hands();
-//        Hand myHand;
-//        
-//        if(rightHand == true){
-//            myHand = hands.rightmost();
-//        }else{
-//            myHand = hands.leftmost();
-//        }
-//        
-//        Vector pos = myHand.palmPosition();
-//        
-//        int x_pos = (int)(pos.getX()/joyStickSensitivity);
-//        int y_pos = (int)(pos.getY()/joyStickSensitivity);
-//        int z_pos = (int)(pos.getZ()/joyStickSensitivity);
-
-        int x_pos = (int)(x/joyStickSensitivity);
-        int y_pos = (int)(y/joyStickSensitivity);
-        int z_pos = (int)(z/joyStickSensitivity);
+        int x_pos = Math.round(this.handCurrentX*joyStickSensitivity/100);
+        int y_pos = Math.round(this.handCurrentY*joyStickSensitivity/100);
+        int z_pos = Math.round(this.handCurrentZ*joyStickSensitivity/100);
         
-        if(zAxis == true){
-            moveMouse(currentX + x_pos, currentY + z_pos);
-            currentX = currentX + x_pos;
-            currentY = currentY + z_pos;
+        if(useZAxis == true){
+            
+            moveMouse(mousePositionX + x_pos, mousePositionY + z_pos);
+            
+            mousePositionX = mousePositionX + x_pos;
+            mousePositionY = mousePositionY + z_pos;
+            
         }else{
-            moveMouse(currentX + x_pos, currentY - (y_pos-yCenter));
-            currentX = currentX + x_pos;
-            currentY = currentY - (y_pos-yCenter);
+            
+            moveMouse(mousePositionX + x_pos, mousePositionY - (y_pos-yPosCalibration));
+            
+            mousePositionX = mousePositionX + x_pos;
+            mousePositionY = mousePositionY - (y_pos-yPosCalibration);
+            
         }
         
     }
     
-    private void moveMousePad(double x, double y, double z){
-//    
-//        HandList hands = frame.hands();
-//        Hand myHand;
-//        
-//        if(rightHand == true){
-//            myHand = hands.rightmost();
-//        }else{
-//            myHand = hands.leftmost();
-//        }
-//        
-//        Vector pos = myHand.palmPosition();
+    private void moveStandard(){
         
-//        int x_pos = (int)pos.getX();
-//        int y_pos = (int)pos.getY();
-//        int z_pos = (int)pos.getZ();
+        int x_pos = Math.round(this.handCurrentX*padSensitivity/100);
+        int y_pos = Math.round(this.handCurrentY*padSensitivity/100);
+        int z_pos = Math.round(this.handCurrentZ*padSensitivity/100);
         
-        if(zAxis == true){
-            moveMouse(currentX + pMulti*(int)x, currentY + pMulti*(int)z);
+        if(useZAxis == true){
+            moveMouse(screenWidth + x_pos, screenHeight + z_pos);
         }else{
-            moveMouse(currentX + pMulti*(int)x, currentY - pMulti*(int)(y - yCenter));
-        }
-    }
-    
-    private void moveMouseTrack(double x, double y, double z){
-    
-//        HandList hands = frame.hands();
-//        Hand myHand;
-//        
-//        if(rightHand == true){
-//            myHand = hands.rightmost();
-//        }else{
-//            myHand = hands.leftmost();
-//        }
-//        
-//        Vector pos = myHand.palmPosition();
-//        
-//        int x_pos = (int)pos.getX();
-//        int y_pos = (int)pos.getY();
-//        int z_pos = (int)pos.getZ();
-        
-        if(zAxis == true){
-            moveMouse(trackX + pMulti*(int)x, trackY + pMulti*(int)(z));
-        }else{
-            moveMouse(trackX + pMulti*(int)x, trackY - pMulti*(int)(y - yCenter));
+            moveMouse(screenWidth + x_pos, screenHeight - (y_pos - yPosCalibration));
         }
            
     }
     
-    public void mouseTrackUpdate(){
-    
-        Point a = MouseInfo.getPointerInfo().getLocation();
-
-        trackX = (int)a.getX();
-        trackY = (int)a.getY();
+    private void moveTrackPad(){
+        
+        int x_pos = Math.round(this.handCurrentX*padSensitivity/100);
+        int y_pos = Math.round(this.handCurrentY*padSensitivity/100);
+        int z_pos = Math.round(this.handCurrentZ*padSensitivity/100);
+        
+        if(useZAxis == true){
+            
+            if(x_pos > trackPadWindowWidth || x_pos < (-1)*trackPadWindowWidth || z_pos > trackPadWindowHeight || z_pos < (-1)*trackPadWindowHeight){
+                
+                Point pointer = MouseInfo.getPointerInfo().getLocation();
+                mousePositionX = (int)pointer.getX();
+                mousePositionY = (int)pointer.getY();
+                
+            }else{
+                moveMouse(mousePositionX + x_pos, mousePositionY + z_pos);
+            }
+        }else{
+            moveMouse(mousePositionX + x_pos, mousePositionY - (y_pos - yPosCalibration));
+        }
+           
     }
     
-    public int getKeyCode(KeyEvent a){
-    
-        int keycode = a.getKeyCode();
-        return keycode;
+    public void mouseScroll(){
+        
+        int z_pos = this.handCurrentZ;
+        int y_pos = this.handCurrentY;
+        
+        if(useZAxis == true){
+            robot.mouseWheel(z_pos);
+        }else{
+            robot.mouseWheel((y_pos - yPosCalibration)*(-1));
+        }
+        
     }
 
     @Override
     public void performCommand(Command command) {
+        
 //        MOUSE_PRIMARY_DOWN,
 //        MOUSE_PRIMARY_HELD_DOWN,
 //        MOUSE_PRIMARY_UP,
@@ -348,48 +248,61 @@ public class BasicCommands implements OSControl{
 //        KEY_DOWN,
 //        KEY_HELD_DOWN,
 //        KEY_UP,
+
         switch(command){
             case MOUSE_PRIMARY_DOWN:
-                this.primaryClick();
-                break;
-            case MOUSE_PRIMARY_HELD_DOWN:
                 this.primaryClickHold();
                 break;
             case MOUSE_PRIMARY_UP:
                 this.primaryClickRelease();
                 break;
             case MOUSE_PRIMARY_CLICK:
-                
+                this.primaryClick();
                 break;
             case MOUSE_SECONDARY_DOWN:
-                this.secondaryClick();
-                break;
-            case MOUSE_SECONDARY_HELD_DOWN:
                 this.secondaryClickHold();
                 break;
             case MOUSE_SECONDARY_UP:
                 this.secondaryClickRelease();
                 break;
             case MOUSE_SECONDARY_CLICK:
+                this.secondaryClick();
                 break;
-            case MOUSE_SCROLL_DOWN:
-                break;
-            case MOUSE_SCROLL_UP:
+            case MOUSE_SCROLL:
+                this.mouseScroll();
                 break;
             case MOUSE_MOVE:
+                this.moveStandard();
                 break;
             case KEY_DOWN:
-//                this.pressKeyDown();
                 break;
             case KEY_HELD_DOWN:
                 break;
             case KEY_UP:
-                break;
+                break;    
         }
     }
-
+    
+    public void useAutoDelay(){
+        
+        this.robot.setAutoDelay(this.autoDelay);    
+        this.robot.setAutoWaitForIdle(true);
+        
+    }
+    
+    public void stopAutoDelay(){
+        
+        this.robot.setAutoDelay(this.autoDelay);    
+        this.robot.setAutoWaitForIdle(false); 
+        
+    }
+    
     @Override
-    public void updateHandPosition(Integer x, Integer y, Integer z) {
-        //do with this what you need to
+    public void updateHandPosition(Integer x, Integer y, Integer z){
+        
+        this.handCurrentX = x;
+        this.handCurrentY = y;  
+        this.handCurrentZ = z;
+        
     }
 }
