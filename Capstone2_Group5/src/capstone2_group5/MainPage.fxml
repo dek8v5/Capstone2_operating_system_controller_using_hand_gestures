@@ -37,10 +37,10 @@
             </Button>
          </children>
       </HBox>
-      <TableView fx:id="gestureMappingTable" layoutX="32.0" layoutY="152.0" prefHeight="379.0" prefWidth="388.0">
+      <TableView fx:id="gestureMappingTable" layoutX="32.0" layoutY="152.0" onSort="#tableTest" prefHeight="379.0" prefWidth="388.0">
          <columns>
-            <TableColumn fx:id="columnGesture" onEditStart="#populateGestureColumn" prefWidth="170.0" text="Gesture" />
-            <TableColumn fx:id="columnCommand" onEditStart="#populateCommandColumn" prefWidth="217.0" text="Command" />
+            <TableColumn fx:id="columnGesture" prefWidth="182.0" text="Gesture" />
+            <TableColumn fx:id="columnCommand" prefWidth="205.0" text="Command" />
          </columns>
       </TableView>
       <Label layoutX="37.0" layoutY="121.0" prefHeight="19.0" prefWidth="134.0" text="Gesture Mapping" textOverrun="WORD_ELLIPSIS">
@@ -64,7 +64,7 @@
       <HBox alignment="CENTER_RIGHT" layoutY="603.0" prefHeight="47.0" prefWidth="820.0" style="-fx-background-color: #336699;">
          <children>
 
-            <Button alignment="TOP_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleStart" text="Start" />
+            <Button fx:id="start" alignment="TOP_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleStart" text="Start" />
 
             <Button alignment="BASELINE_CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="Cancel" textAlignment="CENTER">
                <HBox.margin>
@@ -79,7 +79,7 @@
       <Label layoutX="570.0" layoutY="148.0" prefHeight="17.0" prefWidth="33.0" />
       <TextField fx:id="profileName" layoutX="511.0" layoutY="84.0" promptText="New Profile Name" />
       <Button fx:id="btnProfileSave" layoutX="687.0" layoutY="84.0" mnemonicParsing="false" onAction="#handleSaveNewProfile" text="Save" />
-      <Button fx:id="btnProfileCancel" layoutX="747.0" layoutY="84.0" mnemonicParsing="false" text="Cancel" />
+      <Button fx:id="btnProfileCancel" layoutX="747.0" layoutY="84.0" mnemonicParsing="false" onAction="#handleCancelNewProfile" text="Cancel" />
       <Label fx:id="testLabel" layoutX="199.0" layoutY="89.0" />
    </children>
 </AnchorPane>

@@ -22,7 +22,10 @@ public enum Command {
     KEY_HELD_DOWN,
     KEY_UP;
 
+    
     public String toTableString(){
-        return this.name().replace("_", " ").trim();
+        return this.name().replace("_", " ");
+
     }
+
 }
