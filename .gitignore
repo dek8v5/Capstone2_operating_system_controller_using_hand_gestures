@@ -20,6 +20,7 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/Capstone2_Group5/Users/*
 /Capstone2_Group5/nbproject/private/
 /Capstone2_Group5/nbproject/project.properties
 /Capstone2_Group5/nbproject/configs/Run_as_WebStart.properties
