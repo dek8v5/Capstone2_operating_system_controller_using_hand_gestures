@@ -99,21 +99,9 @@ public class MainPageController implements Initializable {
     
     String selectedUser;
     
-   
-    
- /*   //TESTING
-    HashMap<String, String> commandGesture = new HashMap<String,String>(){{
-        put("Command1", "null");
-        put("Command2", "null");
-        put("Command3", "null");
-    }};
-  */
-    
     HashMap<Command, Gesture> commandAndGesture;
     ArrayList<Gesture> gestures;
     ObservableList<String> gestureCombo;
-    
- //////////TEST ENDS
     
     @FXML
     private void handleNewGesture(ActionEvent event) throws IOException, Exception{
@@ -166,14 +154,16 @@ public class MainPageController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         hideNewProfile();
         populateProfileList();
- 
-        tableTest();
-     
+        
+        try {
+            populateTable();
+        } catch (Exception ex) {
+            Logger.getLogger(MainPageController.class.getName()).log(Level.SEVERE, null, ex);
+        }   
     }
     
-    //FOR TEST PURPOSE
     @FXML
-    public void tableTest(){
+    public void populateTable() throws IOException, Exception{
         
         gestureCombo = FXCollections.observableArrayList();
         //hasmap data
@@ -184,14 +174,6 @@ public class MainPageController implements Initializable {
         gestures.forEach((gesture) -> {
             gestureCombo.add(gesture.name);});
         
-//        System.out.println(UserManager.getCurrentUser().getGestures());
-        //for combobox inside gesture column
-        //gestureCombo = FXCollections.observableArrayList(UserManager.getCurrentUser().getGestures());
-        //gestureCombo.addAll("Gesture11", "Gesture12", "Gesture13", "Gesture14");
-        
-        //if the UserManagerdata are ready -> uncomment this change the arraylist to be gesture diamond
-        //gestureCombo = FXCollections.observableArrayList(UserManager.getCurrentUser().getGestures());
-      
         columnCommand.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<Command, Gesture>, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<Command, Gesture>, String> p) {
@@ -256,12 +238,9 @@ public class MainPageController implements Initializable {
       System.out.println(UserManager.getCurrentUser().makeJSONString());
     }
     
-
     public void loadSelectedUser(String userSelected){
-
         
     }
-
 
 }
 
